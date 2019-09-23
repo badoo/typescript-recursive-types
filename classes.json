@@ -1,0 +1,138 @@
+[
+    {
+        "name": "C",
+        "documentation": "Documentation for C",
+        "type": {
+            "__constructor": {
+                "name": "__constructor",
+                "documentation": "constructor documentation",
+                "type": "any"
+            }
+        },
+        "constructors": [
+            {
+                "parameters": [
+                    {
+                        "name": "a",
+                        "documentation": "my parameter documentation",
+                        "type": {
+                            "name": "Props",
+                            "type": {
+                                "gallery": {
+                                    "name": "gallery",
+                                    "documentation": "",
+                                    "type": {
+                                        "name": "Gallery",
+                                        "type": {
+                                            "mainImage": {
+                                                "name": "mainImage",
+                                                "documentation": "",
+                                                "type": {
+                                                    "name": "Image",
+                                                    "type": {
+                                                        "src": {
+                                                            "name": "src",
+                                                            "documentation": "src description",
+                                                            "type": "string"
+                                                        },
+                                                        "showLoading": {
+                                                            "name": "showLoading",
+                                                            "documentation": "showLoading description",
+                                                            "type": "boolean"
+                                                        },
+                                                        "imgType": {
+                                                            "name": "imgType",
+                                                            "documentation": "",
+                                                            "type": {
+                                                                "name": "enum",
+                                                                "value": [
+                                                                    {
+                                                                        "name": "JPG",
+                                                                        "value": 0
+                                                                    },
+                                                                    {
+                                                                        "name": "WEBP",
+                                                                        "value": 1
+                                                                    },
+                                                                    {
+                                                                        "name": "GIF",
+                                                                        "value": 2
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "pages": {
+                                                "name": "pages",
+                                                "documentation": "",
+                                                "type": {
+                                                    "name": "Page[]",
+                                                    "type": [
+                                                        {
+                                                            "name": "Page",
+                                                            "type": {
+                                                                "index": {
+                                                                    "name": "index",
+                                                                    "documentation": "",
+                                                                    "type": "number"
+                                                                },
+                                                                "image": {
+                                                                    "name": "image",
+                                                                    "documentation": "",
+                                                                    "type": {
+                                                                        "name": "Image",
+                                                                        "type": {
+                                                                            "src": {
+                                                                                "name": "src",
+                                                                                "documentation": "src description",
+                                                                                "type": "string"
+                                                                            },
+                                                                            "showLoading": {
+                                                                                "name": "showLoading",
+                                                                                "documentation": "showLoading description",
+                                                                                "type": "boolean"
+                                                                            },
+                                                                            "imgType": {
+                                                                                "name": "imgType",
+                                                                                "documentation": "",
+                                                                                "type": {
+                                                                                    "name": "enum",
+                                                                                    "value": [
+                                                                                        {
+                                                                                            "name": "JPG",
+                                                                                            "value": 0
+                                                                                        },
+                                                                                        {
+                                                                                            "name": "WEBP",
+                                                                                            "value": 1
+                                                                                        },
+                                                                                        {
+                                                                                            "name": "GIF",
+                                                                                            "value": 2
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+                "returnType": "C",
+                "documentation": "constructor documentation"
+            }
+        ]
+    }
+]
