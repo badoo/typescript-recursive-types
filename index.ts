@@ -1,5 +1,6 @@
 import * as ts from 'typescript';
-import * as fs from 'fs';
+
+const __DEBUG__ = false;
 
 interface DocEntry {
     name?: string;
@@ -30,7 +31,7 @@ function generateDocumentation(fileNames: string[], options: ts.CompilerOptions)
     }
 
     // print out the doc
-    fs.writeFileSync('classes.json', JSON.stringify(output, undefined, 4));
+    console.log(JSON.stringify(output, undefined, 4));
 
     return;
 
@@ -58,7 +59,10 @@ function generateDocumentation(fileNames: string[], options: ts.CompilerOptions)
     /** Serialize a symbol into a json object */
     function serializeTypeRecusrsive(type: ts.Type): any {
         const name = checker.typeToString(type);
-        console.log('Type', name);
+
+        if (__DEBUG__) {
+            console.log('Type', name);
+        }
 
         if (!type.symbol) {
             return name;
@@ -108,7 +112,9 @@ function generateDocumentation(fileNames: string[], options: ts.CompilerOptions)
     function serializeSymbolRecursive(symbol: ts.Symbol): DocEntry {
         let foundType;
 
-        console.log('Symbol', symbol.getName());
+        if (__DEBUG__) {
+            console.log('Symbol', symbol.getName());
+        }
 
         if (symbol.members) {
             foundType = {} as { [key: string]: DocEntry };
@@ -165,14 +171,7 @@ generateDocumentation(process.argv.slice(2), {
     target: ts.ScriptTarget.ES5,
     module: ts.ModuleKind.CommonJS,
 });
-// to try this:
 
-// tsc docGenerator.ts --m commonjs
-// node docGenerator.js test.ts
-// Passing an input like:
-
-// The Type definitions exposed by TS don't match the parsed shape of the type
-// so this is a workdaround to surrive that
 interface ObservedType extends ts.Type {
     intrinsicName?: string;
     typeArguments?: ts.Type[]

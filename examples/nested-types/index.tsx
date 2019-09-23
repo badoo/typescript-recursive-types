@@ -29,7 +29,7 @@ type Props = {
 /**
  * Documentation for C
  */
-class C {
+class Component {
     /**
      * constructor documentation
      * @param a my parameter documentation
