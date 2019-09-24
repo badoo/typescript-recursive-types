@@ -1,6 +1,9 @@
 enum ImageType {
+    /** JPEEEEEEEEEE */
     JPG,
+    /** WEBPEEEEE */
     WEBP,
+    /** GIFFFWEEE */
     GIF
 }
 
@@ -23,7 +26,10 @@ type Gallery = {
 }
 
 type Props = {
-    gallery: Gallery
+    /** gallery description */
+    gallery: Gallery;
+    /** isLoading description */
+    isLoading: boolean;
 }
 
 /**

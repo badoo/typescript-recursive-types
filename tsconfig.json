@@ -3,10 +3,20 @@
         "module": "commonjs",
         "target": "es2016",
         "jsx": "preserve",
-        "noEmit": true
+        "noEmit": true,
+        "strict": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": true,
+        "alwaysStrict": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true
     },
     "exclude": [
         "node_modules",
         "**/node_modules/*"
-    ]
+    ],
+    "include": ["./**/*"]
 }
