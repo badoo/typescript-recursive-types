@@ -1,0 +1,583 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Extracts type information from file 1`] = `
+Array [
+  Object {
+    "constructors": Array [
+      Object {
+        "documentation": "constructor documentation",
+        "parameters": Array [
+          Object {
+            "documentation": "my parameter documentation",
+            "name": "Props",
+            "type": "Props",
+            "value": Array [
+              Object {
+                "documentation": "gallery description",
+                "isOptional": false,
+                "name": "gallery",
+                "type": "Gallery",
+                "value": Array [
+                  Object {
+                    "documentation": "mainImage description",
+                    "isOptional": false,
+                    "name": "mainImage",
+                    "type": "Image",
+                    "value": Array [
+                      Object {
+                        "documentation": "src description",
+                        "isOptional": false,
+                        "name": "src",
+                        "type": "string",
+                        "value": Object {
+                          "documentation": "",
+                          "name": "string",
+                          "type": "string",
+                          "value": "string",
+                        },
+                      },
+                      Object {
+                        "documentation": "showLoading description",
+                        "isOptional": false,
+                        "name": "showLoading",
+                        "type": "boolean",
+                        "value": Object {
+                          "documentation": "",
+                          "name": "boolean",
+                          "type": "boolean",
+                          "value": "true | false",
+                        },
+                      },
+                      Object {
+                        "documentation": "imgType description",
+                        "isOptional": false,
+                        "name": "imgType",
+                        "type": "ImageType",
+                        "value": Object {
+                          "documentation": "",
+                          "name": "ImageType",
+                          "type": "enum",
+                          "value": Array [
+                            Object {
+                              "documentation": "JPG description",
+                              "name": "JPG",
+                              "type": "number",
+                              "value": 0,
+                            },
+                            Object {
+                              "documentation": "WEBP description",
+                              "name": "WEBP",
+                              "type": "number",
+                              "value": 1,
+                            },
+                            Object {
+                              "documentation": "GIF description",
+                              "name": "GIF",
+                              "type": "string",
+                              "value": "\\"gif\\"",
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                  Object {
+                    "documentation": "pages description",
+                    "isOptional": false,
+                    "name": "pages",
+                    "type": "Page[]",
+                    "value": Object {
+                      "documentation": "",
+                      "name": "Page[]",
+                      "type": "array",
+                      "value": Array [
+                        Array [
+                          Object {
+                            "documentation": "index description",
+                            "isOptional": false,
+                            "name": "index",
+                            "type": "number",
+                            "value": Object {
+                              "documentation": "",
+                              "name": "number",
+                              "type": "string",
+                              "value": "number",
+                            },
+                          },
+                          Object {
+                            "documentation": "image description",
+                            "isOptional": false,
+                            "name": "image",
+                            "type": "Image",
+                            "value": Array [
+                              Object {
+                                "documentation": "src description",
+                                "isOptional": false,
+                                "name": "src",
+                                "type": "string",
+                                "value": Object {
+                                  "documentation": "",
+                                  "name": "string",
+                                  "type": "string",
+                                  "value": "string",
+                                },
+                              },
+                              Object {
+                                "documentation": "showLoading description",
+                                "isOptional": false,
+                                "name": "showLoading",
+                                "type": "boolean",
+                                "value": Object {
+                                  "documentation": "",
+                                  "name": "boolean",
+                                  "type": "boolean",
+                                  "value": "true | false",
+                                },
+                              },
+                              Object {
+                                "documentation": "imgType description",
+                                "isOptional": false,
+                                "name": "imgType",
+                                "type": "ImageType",
+                                "value": Object {
+                                  "documentation": "",
+                                  "name": "ImageType",
+                                  "type": "enum",
+                                  "value": Array [
+                                    Object {
+                                      "documentation": "JPG description",
+                                      "name": "JPG",
+                                      "type": "number",
+                                      "value": 0,
+                                    },
+                                    Object {
+                                      "documentation": "WEBP description",
+                                      "name": "WEBP",
+                                      "type": "number",
+                                      "value": 1,
+                                    },
+                                    Object {
+                                      "documentation": "GIF description",
+                                      "name": "GIF",
+                                      "type": "string",
+                                      "value": "\\"gif\\"",
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      ],
+                    },
+                  },
+                ],
+              },
+              Object {
+                "documentation": "empty array",
+                "isOptional": false,
+                "name": "test",
+                "type": "[]",
+                "value": Object {
+                  "documentation": "",
+                  "name": "[]",
+                  "type": "array",
+                  "value": "none",
+                },
+              },
+              Object {
+                "documentation": "any array",
+                "isOptional": false,
+                "name": "test2",
+                "type": "any[]",
+                "value": Object {
+                  "documentation": "",
+                  "name": "any[]",
+                  "type": "array",
+                  "value": Array [
+                    Object {
+                      "documentation": "",
+                      "name": "any",
+                      "type": "any",
+                      "value": "any",
+                    },
+                  ],
+                },
+              },
+              Object {
+                "documentation": "as const",
+                "isOptional": true,
+                "name": "constProp",
+                "type": "readonly [\\"name\\", \\"message\\", \\"number\\", \\"fileName\\", \\"lineno\\", \\"colno\\"]",
+                "value": Object {
+                  "documentation": "",
+                  "name": "readonly [\\"name\\", \\"message\\", \\"number\\", \\"fileName\\", \\"lineno\\", \\"colno\\"]",
+                  "type": "enum",
+                  "value": Array [
+                    Object {
+                      "documentation": "",
+                      "name": "\\"name\\"",
+                      "type": "string",
+                      "value": "\\"name\\"",
+                    },
+                    Object {
+                      "documentation": "",
+                      "name": "\\"message\\"",
+                      "type": "string",
+                      "value": "\\"message\\"",
+                    },
+                    Object {
+                      "documentation": "",
+                      "name": "\\"number\\"",
+                      "type": "string",
+                      "value": "\\"number\\"",
+                    },
+                    Object {
+                      "documentation": "",
+                      "name": "\\"fileName\\"",
+                      "type": "string",
+                      "value": "\\"fileName\\"",
+                    },
+                    Object {
+                      "documentation": "",
+                      "name": "\\"lineno\\"",
+                      "type": "string",
+                      "value": "\\"lineno\\"",
+                    },
+                    Object {
+                      "documentation": "",
+                      "name": "\\"colno\\"",
+                      "type": "string",
+                      "value": "\\"colno\\"",
+                    },
+                  ],
+                },
+              },
+              Object {
+                "documentation": "function",
+                "isOptional": true,
+                "name": "showPage",
+                "type": "{ (page: Page): boolean; (page: Page, isDefault: boolean): boolean; }",
+                "value": Object {
+                  "documentation": "",
+                  "name": "{ (page: Page): boolean; (page: Page, isDefault: boolean): boolean; }",
+                  "type": "function",
+                  "value": Array [
+                    Object {
+                      "documentation": "",
+                      "parameters": Array [
+                        Object {
+                          "documentation": "",
+                          "name": "Page",
+                          "type": "Page",
+                          "value": Array [
+                            Object {
+                              "documentation": "index description",
+                              "isOptional": false,
+                              "name": "index",
+                              "type": "number",
+                              "value": Object {
+                                "documentation": "",
+                                "name": "number",
+                                "type": "string",
+                                "value": "number",
+                              },
+                            },
+                            Object {
+                              "documentation": "image description",
+                              "isOptional": false,
+                              "name": "image",
+                              "type": "Image",
+                              "value": Array [
+                                Object {
+                                  "documentation": "src description",
+                                  "isOptional": false,
+                                  "name": "src",
+                                  "type": "string",
+                                  "value": Object {
+                                    "documentation": "",
+                                    "name": "string",
+                                    "type": "string",
+                                    "value": "string",
+                                  },
+                                },
+                                Object {
+                                  "documentation": "showLoading description",
+                                  "isOptional": false,
+                                  "name": "showLoading",
+                                  "type": "boolean",
+                                  "value": Object {
+                                    "documentation": "",
+                                    "name": "boolean",
+                                    "type": "boolean",
+                                    "value": "true | false",
+                                  },
+                                },
+                                Object {
+                                  "documentation": "imgType description",
+                                  "isOptional": false,
+                                  "name": "imgType",
+                                  "type": "ImageType",
+                                  "value": Object {
+                                    "documentation": "",
+                                    "name": "ImageType",
+                                    "type": "enum",
+                                    "value": Array [
+                                      Object {
+                                        "documentation": "JPG description",
+                                        "name": "JPG",
+                                        "type": "number",
+                                        "value": 0,
+                                      },
+                                      Object {
+                                        "documentation": "WEBP description",
+                                        "name": "WEBP",
+                                        "type": "number",
+                                        "value": 1,
+                                      },
+                                      Object {
+                                        "documentation": "GIF description",
+                                        "name": "GIF",
+                                        "type": "string",
+                                        "value": "\\"gif\\"",
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                      "returnType": "boolean",
+                    },
+                    Object {
+                      "documentation": "",
+                      "parameters": Array [
+                        Object {
+                          "documentation": "",
+                          "name": "Page",
+                          "type": "Page",
+                          "value": Array [
+                            Object {
+                              "documentation": "index description",
+                              "isOptional": false,
+                              "name": "index",
+                              "type": "number",
+                              "value": Object {
+                                "documentation": "",
+                                "name": "number",
+                                "type": "string",
+                                "value": "number",
+                              },
+                            },
+                            Object {
+                              "documentation": "image description",
+                              "isOptional": false,
+                              "name": "image",
+                              "type": "Image",
+                              "value": Array [
+                                Object {
+                                  "documentation": "src description",
+                                  "isOptional": false,
+                                  "name": "src",
+                                  "type": "string",
+                                  "value": Object {
+                                    "documentation": "",
+                                    "name": "string",
+                                    "type": "string",
+                                    "value": "string",
+                                  },
+                                },
+                                Object {
+                                  "documentation": "showLoading description",
+                                  "isOptional": false,
+                                  "name": "showLoading",
+                                  "type": "boolean",
+                                  "value": Object {
+                                    "documentation": "",
+                                    "name": "boolean",
+                                    "type": "boolean",
+                                    "value": "true | false",
+                                  },
+                                },
+                                Object {
+                                  "documentation": "imgType description",
+                                  "isOptional": false,
+                                  "name": "imgType",
+                                  "type": "ImageType",
+                                  "value": Object {
+                                    "documentation": "",
+                                    "name": "ImageType",
+                                    "type": "enum",
+                                    "value": Array [
+                                      Object {
+                                        "documentation": "JPG description",
+                                        "name": "JPG",
+                                        "type": "number",
+                                        "value": 0,
+                                      },
+                                      Object {
+                                        "documentation": "WEBP description",
+                                        "name": "WEBP",
+                                        "type": "number",
+                                        "value": 1,
+                                      },
+                                      Object {
+                                        "documentation": "GIF description",
+                                        "name": "GIF",
+                                        "type": "string",
+                                        "value": "\\"gif\\"",
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                        Object {
+                          "documentation": "",
+                          "name": "boolean",
+                          "type": "boolean",
+                          "value": Object {
+                            "documentation": "",
+                            "name": "boolean",
+                            "type": "boolean",
+                            "value": "true | false",
+                          },
+                        },
+                      ],
+                      "returnType": "boolean",
+                    },
+                  ],
+                },
+              },
+              Object {
+                "documentation": "shaped object",
+                "isOptional": true,
+                "name": "report",
+                "type": "ErrorReport",
+                "value": Array [
+                  Object {
+                    "documentation": "",
+                    "isOptional": true,
+                    "name": "number",
+                    "type": "\\"number\\"",
+                    "value": Object {
+                      "documentation": "",
+                      "name": "any",
+                      "type": "any",
+                      "value": "any",
+                    },
+                  },
+                  Object {
+                    "documentation": "",
+                    "isOptional": true,
+                    "name": "name",
+                    "type": "\\"name\\"",
+                    "value": Object {
+                      "documentation": "",
+                      "name": "any",
+                      "type": "any",
+                      "value": "any",
+                    },
+                  },
+                  Object {
+                    "documentation": "",
+                    "isOptional": true,
+                    "name": "message",
+                    "type": "\\"message\\"",
+                    "value": Object {
+                      "documentation": "",
+                      "name": "any",
+                      "type": "any",
+                      "value": "any",
+                    },
+                  },
+                  Object {
+                    "documentation": "",
+                    "isOptional": true,
+                    "name": "fileName",
+                    "type": "\\"fileName\\"",
+                    "value": Object {
+                      "documentation": "",
+                      "name": "any",
+                      "type": "any",
+                      "value": "any",
+                    },
+                  },
+                  Object {
+                    "documentation": "",
+                    "isOptional": true,
+                    "name": "lineno",
+                    "type": "\\"lineno\\"",
+                    "value": Object {
+                      "documentation": "",
+                      "name": "any",
+                      "type": "any",
+                      "value": "any",
+                    },
+                  },
+                  Object {
+                    "documentation": "",
+                    "isOptional": true,
+                    "name": "colno",
+                    "type": "\\"colno\\"",
+                    "value": Object {
+                      "documentation": "",
+                      "name": "any",
+                      "type": "any",
+                      "value": "any",
+                    },
+                  },
+                ],
+              },
+              Object {
+                "documentation": "inline union",
+                "isOptional": true,
+                "name": "optional",
+                "type": "boolean | 123",
+                "value": Object {
+                  "documentation": "",
+                  "name": "boolean | 123",
+                  "type": "enum",
+                  "value": Array [
+                    Object {
+                      "documentation": "",
+                      "name": "false",
+                      "type": "boolean",
+                      "value": "undefined",
+                    },
+                    Object {
+                      "documentation": "",
+                      "name": "true",
+                      "type": "boolean",
+                      "value": "undefined",
+                    },
+                    Object {
+                      "documentation": "",
+                      "name": "123",
+                      "type": "number",
+                      "value": 123,
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        ],
+        "returnType": "Component",
+      },
+    ],
+    "documentation": "Documentation for C",
+    "name": "default",
+    "type": Object {
+      "documentation": "Documentation for C",
+      "name": "typeof Component",
+      "type": "typeof Component",
+      "value": Array [],
+    },
+  },
+]
+`;

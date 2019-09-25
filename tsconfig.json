@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
         "module": "commonjs",
-        "target": "es2016",
+        "target": "es5",
         "jsx": "preserve",
-        "noEmit": true,
         "strict": true,
         "strictBindCallApply": true,
         "strictFunctionTypes": true,
@@ -12,11 +11,14 @@
         "alwaysStrict": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
-        "noImplicitThis": true
+        "noImplicitThis": true,
+        "declaration": true,
+        "outDir": "./dist"
     },
     "exclude": [
         "node_modules",
-        "**/node_modules/*"
+        "**/node_modules/*",
+        "dist"
     ],
     "include": ["./**/*"]
 }

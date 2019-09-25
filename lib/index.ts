@@ -8,21 +8,25 @@ import {
     isClassDeclaration,
     isModuleDeclaration,
     ModifierFlags,
-    ModuleKind,
     Node,
-    ScriptTarget,
     Signature,
     Symbol,
     SyntaxKind,
     Type,
     TypeChecker,
-    UnionOrIntersectionType,
+    TypeFlags,
+    SymbolFlags,
+    LiteralType
 } from 'typescript';
 
 const __DEBUG__ = false;
 
 /** Generate documentation for all classes in a set of .ts files */
-function generateDocumentation(fileNames: string[], options: CompilerOptions): void {
+function generateDocumentationFromNode(checker: TypeChecker, node: Node): DocEntry[] {
+    return visit(checker, node);
+}
+
+function generateDocumentationFromFiles(fileNames: string[], options: CompilerOptions): DocEntry[] {
     // Build a program using the set of root file names in fileNames
     let program = createProgram(fileNames, options);
 
@@ -36,23 +40,23 @@ function generateDocumentation(fileNames: string[], options: CompilerOptions): v
         if (!sourceFile.isDeclarationFile) {
             // Walk the tree to search for classes
             forEachChild(sourceFile, (node: Node) => {
-                output = output.concat(visit(checker, node));
+                output = output.concat(generateDocumentationFromNode(checker, node));
             });
         }
     }
 
-    // print out the doc
-    console.log(JSON.stringify(output, undefined, 2));
+    return output;
 }
 
-generateDocumentation(process.argv.slice(2), {
-    target: ScriptTarget.ES5,
-    module: ModuleKind.CommonJS,
-});
+export {
+    generateDocumentationFromNode,
+    generateDocumentationFromFiles
+};
 
-function isArrayType(type: Type) {
-    return type.symbol && type.symbol.getName() === 'Array';
-}
+export default {
+    generateDocumentationFromNode,
+    generateDocumentationFromFiles
+};
 
 /** visit nodes finding exported classes */
 function visit(checker: TypeChecker, node: Node) {
@@ -91,6 +95,37 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
         console.log('Type', name);
     }
 
+    // In TS booleans behave like enums so we need to filter them out earlier
+    if (isBoolean(type)) {
+        return {
+            name,
+            type: 'boolean',
+            documentation,
+            value: 'true | false',
+        } as DocEntryType;
+    }
+
+    if (isArray(type, checker)) {
+        return {
+            name,
+            type: 'array',
+            documentation,
+            value: type.typeArguments
+                ? type.typeArguments.map(serializeType.bind(null, checker))
+                : 'none',
+        } as DocEntryType;
+    }
+
+    if (isFunction(type)) {
+        return {
+            name,
+            type: 'function',
+            documentation,
+            value: type.getCallSignatures().map(serializeSignature.bind(null, checker)),
+        } as DocEntryType;
+    }
+
+    // Regular union or intersection enums
     if (type.isUnionOrIntersection()) {
         return {
             name,
@@ -100,10 +135,11 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
         } as DocEntryType;
     }
 
-    if (isArrayType(type as ObservedType) && (type as ObservedType).typeArguments) {
+    // 'as const' or other types like that @todo
+    if ((type as ObservedType).typeArguments) {
         return {
             name,
-            type: 'array',
+            type: 'enum',
             documentation,
             value: (type as ObservedType).typeArguments!.map(serializeType.bind(null, checker)),
         } as DocEntryType;
@@ -119,33 +155,57 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
         } else if (type.isNumberLiteral()) {
             value = type.value;
             detectedType = 'number';
+        } else if (isBooleanLiteral(type)) {
+            value = String(type.value);
+            detectedType = 'boolean';
         } else if (typeof (type as ObservedType).intrinsicName === 'string') {
             value = (type as ObservedType).intrinsicName as string;
+            detectedType = 'string';
+        }
+
+        const typeName = symbol ? symbol.getName() : name;
+
+        if (typeName === 'any' && value === 'any') {
+            detectedType = 'any';
         }
 
         return {
-            name: symbol ? symbol.getName() : name,
+            name: typeName,
             type: detectedType,
             documentation,
             value,
         };
     }
 
-    if (!symbol.members) {
-        throw new Error(`Symbol had no members: ${name}`);
+    const properties = type.getProperties();
+
+    if (!properties) {
+        throw new Error(`Expected type to have some properties: ${name}`);
     }
 
     const foundType: DocEntryType[] = [];
 
-    symbol.members.forEach(member => {
-        const memberType = checker.getTypeOfSymbolAtLocation(member, member.valueDeclaration!);
+    properties.forEach(property => {
+        if (property.valueDeclaration) {
+            const memberType = checker.getTypeOfSymbolAtLocation(property, property.valueDeclaration);
 
-        (foundType as DocEntryType[]).push({
-            name: member.name,
-            type: checker.typeToString(memberType),
-            documentation: displayPartsToString(member.getDocumentationComment(checker)),
-            value: serializeType(checker, memberType),
-        });
+            (foundType as DocEntryType[]).push({
+                name: property.getName(),
+                type: checker.typeToString(memberType),
+                documentation: displayPartsToString(property.getDocumentationComment(checker)),
+                isOptional: isOptional(property),
+                value: serializeType(checker, memberType),
+            });
+        }
+        else if (isObservedSymbol(property)) {
+            (foundType as DocEntryType[]).push({
+                name: property.getName(),
+                type: checker.typeToString(property.nameType),
+                documentation: displayPartsToString(property.getDocumentationComment(checker)),
+                isOptional: isOptional(property),
+                value: serializeType(checker, property.type),
+            });
+        }
     });
 
     return foundType;
@@ -203,7 +263,32 @@ function isNodeExported(node: Node): boolean {
     );
 }
 
-interface DocEntry {
+function isBoolean(type: Type) {
+    return !!(type.getFlags() & TypeFlags.Boolean); // Boolean
+}
+
+function isArray(type: ObservedType, checker: TypeChecker): type is ObservedType {
+    const name = checker.typeToString(type);
+    return name === '[]' || (type.symbol && type.symbol.getName() === 'Array');
+}
+
+function isFunction(type: Type) {
+    return type.getCallSignatures().length > 0;
+}
+
+function isObservedSymbol(symbol: Symbol): symbol is ObservedSymbol {
+    return Boolean(symbol && (symbol as ObservedSymbol).type && (symbol as ObservedSymbol).nameType);
+}
+
+function isOptional(symbol: Symbol) {
+    return !!(symbol.getFlags() & SymbolFlags.Optional);
+}
+
+function isBooleanLiteral(type: Type): type is LiteralType {
+    return !!(type.getFlags() & TypeFlags.BooleanLiteral);
+}
+
+export interface DocEntry {
     name?: string;
     fileName?: string;
     documentation?: string;
@@ -216,11 +301,17 @@ interface DocEntry {
 type DocEntryType = {
     documentation?: string;
     name: string;
-    value: DocEntryType | DocEntryType[] | string | number;
+    value: DocEntryType | DocEntryType[] | DocEntry | DocEntry[] | string | number;
     type: string;
+    isOptional?: boolean;
 };
 
 interface ObservedType extends Type {
     intrinsicName?: string;
     typeArguments?: Type[];
+}
+
+interface ObservedSymbol extends Symbol {
+    nameType: Type;
+    type: Type;
 }
