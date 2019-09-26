@@ -335,7 +335,7 @@ export interface DocEntry {
     returnType?: string;
 }
 
-type DocEntryType = {
+export type DocEntryType = {
     documentation?: string;
     name: string;
     value: DocEntryType | DocEntryType[] | DocEntry | DocEntry[] | string | number;

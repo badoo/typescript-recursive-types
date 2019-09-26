@@ -35,7 +35,7 @@ export interface DocEntry {
     parameters?: DocEntryType[];
     returnType?: string;
 }
-declare type DocEntryType = {
+export declare type DocEntryType = {
     documentation?: string;
     name: string;
     value: DocEntryType | DocEntryType[] | DocEntry | DocEntry[] | string | number;
