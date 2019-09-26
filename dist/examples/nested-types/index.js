@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var CONST_PROPS = ['name', 'message', 'number', 'fileName', 'lineno', 'colno'];
 var ImageType;
 (function (ImageType) {
-    /** JPEEEEEEEEEE */
+    /** JPG description */
     ImageType[ImageType["JPG"] = 0] = "JPG";
-    /** WEBPEEEEE */
+    /** WEBP description */
     ImageType[ImageType["WEBP"] = 1] = "WEBP";
-    /** GIFFFWEEE */
+    /** GIF description */
     ImageType["GIF"] = "gif";
 })(ImageType || (ImageType = {}));
 /**
@@ -17,7 +17,6 @@ var Component = /** @class */ (function () {
     /**
      * constructor documentation
      * @param a my parameter documentation
-     * @param b another parameter documentation
      */
     function Component(a) {
     }

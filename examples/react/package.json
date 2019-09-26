@@ -1,0 +1,17 @@
+{
+    "name": "react-example",
+    "private": false,
+    "version": "0.0.0",
+    "main": "index.tsx",
+    "author": "Nikhil Verma <nikhil.verma@magiclab.co>",
+    "license": "MIT",
+    "dependencies": {
+        "classnames": "^2.2.6",
+        "react": "^16.9.0",
+        "typescript": "^3.6.3"
+    },
+    "devDependencies": {
+        "@types/classnames": "^2.2.9",
+        "@types/react": "^16.9.3"
+    }
+}

@@ -71,7 +71,7 @@ function visit(checker: TypeChecker, node: Node) {
         // This is a top level class, get its symbol
         let symbol = checker.getSymbolAtLocation(node.name);
         if (symbol) {
-            output.push(serializeClass(checker, symbol));
+            output.push(serializeClass(checker, [], symbol));
         }
         // No need to walk any further, class expressions/inner declarations
         // cannot be exported
@@ -84,7 +84,7 @@ function visit(checker: TypeChecker, node: Node) {
 }
 
 /** Serialize a symbol into a json object */
-function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntryType[] {
+function serializeType(checker: TypeChecker, serialisedTypes: Type[], type: Type): DocEntryType | DocEntryType[] {
     const name = checker.typeToString(type);
     const symbol = type.symbol;
     const documentation = symbol
@@ -94,6 +94,14 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
     if (__DEBUG__) {
         console.log('Type', name);
     }
+
+    // We've already serialised the type in this stack
+    // This is needed to prevent infinite loop on recursive or circular depencency types
+    if (serialisedTypes.includes(type)) {
+        return [];
+    }
+
+    serialisedTypes.push(type);
 
     // In TS booleans behave like enums so we need to filter them out earlier
     if (isBoolean(type)) {
@@ -111,7 +119,7 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
             type: 'array',
             documentation,
             value: type.typeArguments
-                ? type.typeArguments.map(serializeType.bind(null, checker))
+                ? type.typeArguments.map(serializeType.bind(null, checker, serialisedTypes))
                 : 'none',
         } as DocEntryType;
     }
@@ -121,7 +129,7 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
             name,
             type: 'function',
             documentation,
-            value: type.getCallSignatures().map(serializeSignature.bind(null, checker)),
+            value: type.getCallSignatures().map(serializeSignature.bind(null, checker, serialisedTypes)),
         } as DocEntryType;
     }
 
@@ -131,7 +139,7 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
             name,
             type: 'enum',
             documentation,
-            value: type.types.map(serializeType.bind(null, checker)),
+            value: type.types.map(serializeType.bind(null, checker, serialisedTypes)),
         } as DocEntryType;
     }
 
@@ -141,7 +149,7 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
             name,
             type: 'enum',
             documentation,
-            value: (type as ObservedType).typeArguments!.map(serializeType.bind(null, checker)),
+            value: (type as ObservedType).typeArguments!.map(serializeType.bind(null, checker, serialisedTypes)),
         } as DocEntryType;
     }
 
@@ -194,7 +202,7 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
                 type: checker.typeToString(memberType),
                 documentation: displayPartsToString(property.getDocumentationComment(checker)),
                 isOptional: isOptional(property),
-                value: serializeType(checker, memberType),
+                value: serializeType(checker, serialisedTypes, memberType),
             });
         }
         else if (isObservedSymbol(property)) {
@@ -203,7 +211,7 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
                 type: checker.typeToString(property.nameType),
                 documentation: displayPartsToString(property.getDocumentationComment(checker)),
                 isOptional: isOptional(property),
-                value: serializeType(checker, property.type),
+                value: serializeType(checker, serialisedTypes, property.type),
             });
         }
     });
@@ -212,7 +220,7 @@ function serializeType(checker: TypeChecker, type: Type): DocEntryType | DocEntr
 }
 
 /** Serialize a symbol into a json object */
-function serializeSymbol(checker: TypeChecker, symbol: Symbol): DocEntryType {
+function serializeSymbol(checker: TypeChecker, serialisedTypes: Type[], symbol: Symbol): DocEntryType {
     if (__DEBUG__) {
         console.log('Symbol', symbol.getName());
     }
@@ -225,31 +233,31 @@ function serializeSymbol(checker: TypeChecker, symbol: Symbol): DocEntryType {
         name,
         type: name,
         documentation,
-        value: serializeType(checker, type),
+        value: serializeType(checker, serialisedTypes, type),
     };
 }
 
 /** Serialize a class symbol information */
-function serializeClass(checker: TypeChecker, symbol: Symbol) {
+function serializeClass(checker: TypeChecker, serialisedTypes: Type[], symbol: Symbol) {
     let details = {
         name: symbol.getName(),
         documentation: displayPartsToString(symbol.getDocumentationComment(checker)),
-        type: serializeSymbol(checker, symbol),
+        type: serializeSymbol(checker, serialisedTypes, symbol),
     } as DocEntry;
 
     // Get the construct signatures
     let constructorType = checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!);
     details.constructors = constructorType
         .getConstructSignatures()
-        .map(serializeSignature.bind(null, checker));
+        .map(serializeSignature.bind(null, checker, serialisedTypes));
 
     return details;
 }
 
 /** Serialize a signature (call or construct) */
-function serializeSignature(checker: TypeChecker, signature: Signature): DocEntry {
+function serializeSignature(checker: TypeChecker, serialisedTypes: Type[], signature: Signature): DocEntry {
     return {
-        parameters: signature.parameters.map(serializeSymbol.bind(null, checker)),
+        parameters: signature.parameters.map(serializeSymbol.bind(null, checker, serialisedTypes)),
         returnType: checker.typeToString(signature.getReturnType()),
         documentation: displayPartsToString(signature.getDocumentationComment(checker)),
     };

@@ -41,7 +41,7 @@ function visit(checker, node) {
         // This is a top level class, get its symbol
         var symbol = checker.getSymbolAtLocation(node.name);
         if (symbol) {
-            output.push(serializeClass(checker, symbol));
+            output.push(serializeClass(checker, [], symbol));
         }
         // No need to walk any further, class expressions/inner declarations
         // cannot be exported
@@ -53,7 +53,7 @@ function visit(checker, node) {
     return output;
 }
 /** Serialize a symbol into a json object */
-function serializeType(checker, type) {
+function serializeType(checker, serialisedTypes, type) {
     var name = checker.typeToString(type);
     var symbol = type.symbol;
     var documentation = symbol
@@ -62,6 +62,12 @@ function serializeType(checker, type) {
     if (__DEBUG__) {
         console.log('Type', name);
     }
+    // We've already serialised the type in this stack
+    // This is needed to prevent infinite loop on recursive or circular depencency types
+    if (serialisedTypes.includes(type)) {
+        return [];
+    }
+    serialisedTypes.push(type);
     // In TS booleans behave like enums so we need to filter them out earlier
     if (isBoolean(type)) {
         return {
@@ -77,7 +83,7 @@ function serializeType(checker, type) {
             type: 'array',
             documentation: documentation,
             value: type.typeArguments
-                ? type.typeArguments.map(serializeType.bind(null, checker))
+                ? type.typeArguments.map(serializeType.bind(null, checker, serialisedTypes))
                 : 'none',
         };
     }
@@ -86,7 +92,7 @@ function serializeType(checker, type) {
             name: name,
             type: 'function',
             documentation: documentation,
-            value: type.getCallSignatures().map(serializeSignature.bind(null, checker)),
+            value: type.getCallSignatures().map(serializeSignature.bind(null, checker, serialisedTypes)),
         };
     }
     // Regular union or intersection enums
@@ -95,7 +101,7 @@ function serializeType(checker, type) {
             name: name,
             type: 'enum',
             documentation: documentation,
-            value: type.types.map(serializeType.bind(null, checker)),
+            value: type.types.map(serializeType.bind(null, checker, serialisedTypes)),
         };
     }
     // 'as const' or other types like that @todo
@@ -104,7 +110,7 @@ function serializeType(checker, type) {
             name: name,
             type: 'enum',
             documentation: documentation,
-            value: type.typeArguments.map(serializeType.bind(null, checker)),
+            value: type.typeArguments.map(serializeType.bind(null, checker, serialisedTypes)),
         };
     }
     if (!symbol || type.isLiteral()) {
@@ -150,7 +156,7 @@ function serializeType(checker, type) {
                 type: checker.typeToString(memberType),
                 documentation: typescript_1.displayPartsToString(property.getDocumentationComment(checker)),
                 isOptional: isOptional(property),
-                value: serializeType(checker, memberType),
+                value: serializeType(checker, serialisedTypes, memberType),
             });
         }
         else if (isObservedSymbol(property)) {
@@ -159,14 +165,14 @@ function serializeType(checker, type) {
                 type: checker.typeToString(property.nameType),
                 documentation: typescript_1.displayPartsToString(property.getDocumentationComment(checker)),
                 isOptional: isOptional(property),
-                value: serializeType(checker, property.type),
+                value: serializeType(checker, serialisedTypes, property.type),
             });
         }
     });
     return foundType;
 }
 /** Serialize a symbol into a json object */
-function serializeSymbol(checker, symbol) {
+function serializeSymbol(checker, serialisedTypes, symbol) {
     if (__DEBUG__) {
         console.log('Symbol', symbol.getName());
     }
@@ -177,27 +183,27 @@ function serializeSymbol(checker, symbol) {
         name: name,
         type: name,
         documentation: documentation,
-        value: serializeType(checker, type),
+        value: serializeType(checker, serialisedTypes, type),
     };
 }
 /** Serialize a class symbol information */
-function serializeClass(checker, symbol) {
+function serializeClass(checker, serialisedTypes, symbol) {
     var details = {
         name: symbol.getName(),
         documentation: typescript_1.displayPartsToString(symbol.getDocumentationComment(checker)),
-        type: serializeSymbol(checker, symbol),
+        type: serializeSymbol(checker, serialisedTypes, symbol),
     };
     // Get the construct signatures
     var constructorType = checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
     details.constructors = constructorType
         .getConstructSignatures()
-        .map(serializeSignature.bind(null, checker));
+        .map(serializeSignature.bind(null, checker, serialisedTypes));
     return details;
 }
 /** Serialize a signature (call or construct) */
-function serializeSignature(checker, signature) {
+function serializeSignature(checker, serialisedTypes, signature) {
     return {
-        parameters: signature.parameters.map(serializeSymbol.bind(null, checker)),
+        parameters: signature.parameters.map(serializeSymbol.bind(null, checker, serialisedTypes)),
         returnType: checker.typeToString(signature.getReturnType()),
         documentation: typescript_1.displayPartsToString(signature.getDocumentationComment(checker)),
     };
