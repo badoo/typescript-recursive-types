@@ -144,24 +144,9 @@ Array [
                                   "name": "ImageType",
                                   "type": "enum",
                                   "value": Array [
-                                    Object {
-                                      "documentation": "JPG description",
-                                      "name": "JPG",
-                                      "type": "number",
-                                      "value": 0,
-                                    },
-                                    Object {
-                                      "documentation": "WEBP description",
-                                      "name": "WEBP",
-                                      "type": "number",
-                                      "value": 1,
-                                    },
-                                    Object {
-                                      "documentation": "GIF description",
-                                      "name": "GIF",
-                                      "type": "string",
-                                      "value": "\\"gif\\"",
-                                    },
+                                    Array [],
+                                    Array [],
+                                    Array [],
                                   ],
                                 },
                               },

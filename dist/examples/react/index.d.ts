@@ -25,7 +25,7 @@ declare type Props = {
     /**
      * The tag to use to render the button (e.g "button", "a", "label", etc.)
      */
-    tag: keyof JSX.IntrinsicElements;
+    tag: string;
     /**
      * If the button is disabled
      */

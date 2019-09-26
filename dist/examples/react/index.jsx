@@ -109,3 +109,4 @@ var Icon = function (_a) {
         </div>);
 };
 exports.default = Button;
+//# sourceMappingURL=index.jsx.map

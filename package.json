@@ -1,13 +1,13 @@
 {
-  "name": "@magiclab/ts-recursive-parser",
+  "name": "@magiclab/typescript-docgen",
   "private": false,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "cli": "ts-node lib/cli.ts",
-    "test": "jest"
+    "build": "npm install && tsc",
+    "cli": "npx ts-node lib/cli.ts",
+    "test": "npm run build && jest"
   },
   "repository": {
     "type": "git",

@@ -13,7 +13,8 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "declaration": true,
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "sourceMap": true
     },
     "exclude": [
         "node_modules",

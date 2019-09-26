@@ -23,3 +23,4 @@ var Component = /** @class */ (function () {
     return Component;
 }());
 exports.default = Component;
+//# sourceMappingURL=index.js.map

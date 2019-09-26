@@ -6,3 +6,4 @@ console.log(JSON.stringify(index_1.generateDocumentationFromFiles(process.argv.s
     target: typescript_1.ScriptTarget.ES5,
     module: typescript_1.ModuleKind.CommonJS,
 }), null, 2));
+//# sourceMappingURL=cli.js.map

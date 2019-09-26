@@ -1,13 +1,39 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var typescript_1 = require("typescript");
 var __DEBUG__ = false;
+exports.default = {
+    generateDocumentationFromNode: generateDocumentationFromNode,
+    generateDocumentationFromFiles: generateDocumentationFromFiles,
+    serializeType: serializeType,
+    serializeSymbol: serializeSymbol,
+    serializeClass: serializeClass,
+    serializeSignature: serializeSignature,
+};
 /** Generate documentation for all classes in a set of .ts files */
-function generateDocumentationFromNode(checker, node) {
-    return visit(checker, node);
+function generateDocumentationFromNode(checker, node, docGenParams) {
+    return visit(checker, node, docGenParams);
 }
 exports.generateDocumentationFromNode = generateDocumentationFromNode;
-function generateDocumentationFromFiles(fileNames, options) {
+function generateDocumentationFromFiles(fileNames, options, docGenParams) {
     // Build a program using the set of root file names in fileNames
     var program = typescript_1.createProgram(fileNames, options);
     // Get the checker, we will use it to find more about classes
@@ -19,19 +45,15 @@ function generateDocumentationFromFiles(fileNames, options) {
         if (!sourceFile.isDeclarationFile) {
             // Walk the tree to search for classes
             typescript_1.forEachChild(sourceFile, function (node) {
-                output = output.concat(generateDocumentationFromNode(checker, node));
+                output = output.concat(generateDocumentationFromNode(checker, node, docGenParams));
             });
         }
     }
     return output;
 }
 exports.generateDocumentationFromFiles = generateDocumentationFromFiles;
-exports.default = {
-    generateDocumentationFromNode: generateDocumentationFromNode,
-    generateDocumentationFromFiles: generateDocumentationFromFiles
-};
 /** visit nodes finding exported classes */
-function visit(checker, node) {
+function visit(checker, node, docGenParams) {
     var output = [];
     // Only consider exported nodes
     if (!isNodeExported(node)) {
@@ -40,8 +62,14 @@ function visit(checker, node) {
     if (typescript_1.isClassDeclaration(node) && node.name) {
         // This is a top level class, get its symbol
         var symbol = checker.getSymbolAtLocation(node.name);
+        var docContext = {
+            serialisedTypes: [],
+            checker: checker,
+            maxDepth: docGenParams && docGenParams.maxDepth ? docGenParams.maxDepth : 5,
+            maxProps: docGenParams && docGenParams.maxProps ? docGenParams.maxProps : 30
+        };
         if (symbol) {
-            output.push(serializeClass(checker, [], symbol));
+            output.push(serializeClass(docContext, symbol));
         }
         // No need to walk any further, class expressions/inner declarations
         // cannot be exported
@@ -53,21 +81,23 @@ function visit(checker, node) {
     return output;
 }
 /** Serialize a symbol into a json object */
-function serializeType(checker, serialisedTypes, type) {
-    var name = checker.typeToString(type);
+function serializeType(docContext, type) {
+    var name = docContext.checker.typeToString(type);
     var symbol = type.symbol;
     var documentation = symbol
-        ? typescript_1.displayPartsToString(symbol.getDocumentationComment(checker))
+        ? typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker))
         : '';
+    var checker = docContext.checker;
     if (__DEBUG__) {
         console.log('Type', name);
     }
     // We've already serialised the type in this stack
     // This is needed to prevent infinite loop on recursive or circular depencency types
-    if (serialisedTypes.includes(type)) {
+    if (docContext.serialisedTypes.includes(type) || docContext.serialisedTypes.length > docContext.maxDepth) {
         return [];
     }
-    serialisedTypes.push(type);
+    // We don't want to mutate the context as it's shared
+    var newDocContext = __assign(__assign({}, docContext), { serialisedTypes: __spreadArrays(docContext.serialisedTypes, [type]) });
     // In TS booleans behave like enums so we need to filter them out earlier
     if (isBoolean(type)) {
         return {
@@ -83,7 +113,7 @@ function serializeType(checker, serialisedTypes, type) {
             type: 'array',
             documentation: documentation,
             value: type.typeArguments
-                ? type.typeArguments.map(serializeType.bind(null, checker, serialisedTypes))
+                ? type.typeArguments.map(serializeType.bind(null, newDocContext))
                 : 'none',
         };
     }
@@ -92,7 +122,7 @@ function serializeType(checker, serialisedTypes, type) {
             name: name,
             type: 'function',
             documentation: documentation,
-            value: type.getCallSignatures().map(serializeSignature.bind(null, checker, serialisedTypes)),
+            value: type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
         };
     }
     // Regular union or intersection enums
@@ -101,7 +131,7 @@ function serializeType(checker, serialisedTypes, type) {
             name: name,
             type: 'enum',
             documentation: documentation,
-            value: type.types.map(serializeType.bind(null, checker, serialisedTypes)),
+            value: type.types.map(serializeType.bind(null, newDocContext)),
         };
     }
     // 'as const' or other types like that @todo
@@ -110,7 +140,7 @@ function serializeType(checker, serialisedTypes, type) {
             name: name,
             type: 'enum',
             documentation: documentation,
-            value: type.typeArguments.map(serializeType.bind(null, checker, serialisedTypes)),
+            value: type.typeArguments.map(serializeType.bind(null, newDocContext)),
         };
     }
     if (!symbol || type.isLiteral()) {
@@ -147,6 +177,7 @@ function serializeType(checker, serialisedTypes, type) {
     if (!properties) {
         throw new Error("Expected type to have some properties: " + name);
     }
+    var tooManyProps = properties.length > newDocContext.maxProps;
     var foundType = [];
     properties.forEach(function (property) {
         if (property.valueDeclaration) {
@@ -156,7 +187,7 @@ function serializeType(checker, serialisedTypes, type) {
                 type: checker.typeToString(memberType),
                 documentation: typescript_1.displayPartsToString(property.getDocumentationComment(checker)),
                 isOptional: isOptional(property),
-                value: serializeType(checker, serialisedTypes, memberType),
+                value: tooManyProps ? [] : serializeType(newDocContext, memberType),
             });
         }
         else if (isObservedSymbol(property)) {
@@ -165,49 +196,53 @@ function serializeType(checker, serialisedTypes, type) {
                 type: checker.typeToString(property.nameType),
                 documentation: typescript_1.displayPartsToString(property.getDocumentationComment(checker)),
                 isOptional: isOptional(property),
-                value: serializeType(checker, serialisedTypes, property.type),
+                value: tooManyProps ? [] : serializeType(newDocContext, property.type),
             });
         }
     });
     return foundType;
 }
+exports.serializeType = serializeType;
 /** Serialize a symbol into a json object */
-function serializeSymbol(checker, serialisedTypes, symbol) {
+function serializeSymbol(docContext, symbol) {
     if (__DEBUG__) {
         console.log('Symbol', symbol.getName());
     }
-    var type = checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
-    var name = checker.typeToString(type);
-    var documentation = typescript_1.displayPartsToString(symbol.getDocumentationComment(checker));
+    var type = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
+    var name = docContext.checker.typeToString(type);
+    var documentation = typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker));
     return {
         name: name,
         type: name,
         documentation: documentation,
-        value: serializeType(checker, serialisedTypes, type),
+        value: serializeType(docContext, type),
     };
 }
+exports.serializeSymbol = serializeSymbol;
 /** Serialize a class symbol information */
-function serializeClass(checker, serialisedTypes, symbol) {
+function serializeClass(docContext, symbol) {
     var details = {
         name: symbol.getName(),
-        documentation: typescript_1.displayPartsToString(symbol.getDocumentationComment(checker)),
-        type: serializeSymbol(checker, serialisedTypes, symbol),
+        documentation: typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker)),
+        type: serializeSymbol(docContext, symbol),
     };
     // Get the construct signatures
-    var constructorType = checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
+    var constructorType = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
     details.constructors = constructorType
         .getConstructSignatures()
-        .map(serializeSignature.bind(null, checker, serialisedTypes));
+        .map(serializeSignature.bind(null, docContext));
     return details;
 }
+exports.serializeClass = serializeClass;
 /** Serialize a signature (call or construct) */
-function serializeSignature(checker, serialisedTypes, signature) {
+function serializeSignature(docContext, signature) {
     return {
-        parameters: signature.parameters.map(serializeSymbol.bind(null, checker, serialisedTypes)),
-        returnType: checker.typeToString(signature.getReturnType()),
-        documentation: typescript_1.displayPartsToString(signature.getDocumentationComment(checker)),
+        parameters: signature.parameters.map(serializeSymbol.bind(null, docContext)),
+        returnType: docContext.checker.typeToString(signature.getReturnType()),
+        documentation: typescript_1.displayPartsToString(signature.getDocumentationComment(docContext.checker)),
     };
 }
+exports.serializeSignature = serializeSignature;
 /** True if this is visible outside this file, false otherwise */
 function isNodeExported(node) {
     return ((typescript_1.getCombinedModifierFlags(node) & typescript_1.ModifierFlags.Export) !== 0 ||
@@ -232,3 +267,4 @@ function isOptional(symbol) {
 function isBooleanLiteral(type) {
     return !!(type.getFlags() & typescript_1.TypeFlags.BooleanLiteral);
 }
+//# sourceMappingURL=index.js.map
