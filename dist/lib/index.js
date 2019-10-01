@@ -66,7 +66,7 @@ function visit(checker, node, docGenParams) {
             serialisedTypes: [],
             checker: checker,
             maxDepth: docGenParams && docGenParams.maxDepth ? docGenParams.maxDepth : 5,
-            maxProps: docGenParams && docGenParams.maxProps ? docGenParams.maxProps : 30
+            maxProps: docGenParams && docGenParams.maxProps ? docGenParams.maxProps : 30,
         };
         if (symbol) {
             output.push(serializeClass(docContext, symbol));
@@ -93,8 +93,9 @@ function serializeType(docContext, type) {
     }
     // We've already serialised the type in this stack
     // This is needed to prevent infinite loop on recursive or circular depencency types
-    if (docContext.serialisedTypes.includes(type) || docContext.serialisedTypes.length > docContext.maxDepth) {
-        return [];
+    if (docContext.serialisedTypes.includes(type) ||
+        docContext.serialisedTypes.length > docContext.maxDepth) {
+        return null;
     }
     // We don't want to mutate the context as it's shared
     var newDocContext = __assign(__assign({}, docContext), { serialisedTypes: __spreadArrays(docContext.serialisedTypes, [type]) });
@@ -177,30 +178,20 @@ function serializeType(docContext, type) {
     if (!properties) {
         throw new Error("Expected type to have some properties: " + name);
     }
-    var tooManyProps = properties.length > newDocContext.maxProps;
     var foundType = [];
-    properties.forEach(function (property) {
-        if (property.valueDeclaration) {
-            var memberType = checker.getTypeOfSymbolAtLocation(property, property.valueDeclaration);
-            foundType.push({
-                name: property.getName(),
-                type: checker.typeToString(memberType),
-                documentation: typescript_1.displayPartsToString(property.getDocumentationComment(checker)),
-                isOptional: isOptional(property),
-                value: tooManyProps ? [] : serializeType(newDocContext, memberType),
-            });
-        }
-        else if (isObservedSymbol(property)) {
-            foundType.push({
-                name: property.getName(),
-                type: checker.typeToString(property.nameType),
-                documentation: typescript_1.displayPartsToString(property.getDocumentationComment(checker)),
-                isOptional: isOptional(property),
-                value: tooManyProps ? [] : serializeType(newDocContext, property.type),
-            });
-        }
-    });
-    return foundType;
+    // Check if max number of props has exceeded
+    var tooManyProps = properties.length > newDocContext.maxProps;
+    if (!tooManyProps) {
+        properties.forEach(function (symbol) {
+            foundType.push(serializeSymbol(docContext, symbol));
+        });
+    }
+    return {
+        name: name,
+        type: 'shape',
+        documentation: documentation,
+        value: foundType,
+    };
 }
 exports.serializeType = serializeType;
 /** Serialize a symbol into a json object */
@@ -209,15 +200,8 @@ function serializeSymbol(docContext, symbol) {
         console.log('Symbol', symbol.getName());
     }
     var type = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
-    var name = docContext.checker.typeToString(type);
     var documentation = typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker));
-    return {
-        name: name,
-        type: name,
-        documentation: documentation,
-        isOptional: isOptional(symbol),
-        value: serializeType(docContext, type),
-    };
+    return __assign(__assign({}, serializeType(docContext, type)), { documentation: documentation, isOptional: isOptional(symbol), name: symbol.getName() });
 }
 exports.serializeSymbol = serializeSymbol;
 /** Serialize a class symbol information */

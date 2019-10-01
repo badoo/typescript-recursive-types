@@ -16,7 +16,7 @@ import {
     TypeChecker,
     TypeFlags,
     SymbolFlags,
-    LiteralType
+    LiteralType,
 } from 'typescript';
 
 const __DEBUG__ = false;
@@ -40,18 +40,26 @@ export default {
 };
 
 type DocEntryContext = {
-    readonly serialisedTypes: ReadonlyArray<Type>,
-    readonly checker: TypeChecker,
+    readonly serialisedTypes: ReadonlyArray<Type>;
+    readonly checker: TypeChecker;
     readonly maxDepth: number;
     readonly maxProps: number;
-}
+};
 
 /** Generate documentation for all classes in a set of .ts files */
-function generateDocumentationFromNode(checker: TypeChecker, node: Node, docGenParams?: DocGenParams): DocEntry[] {
+function generateDocumentationFromNode(
+    checker: TypeChecker,
+    node: Node,
+    docGenParams?: DocGenParams
+): DocEntry[] {
     return visit(checker, node, docGenParams);
 }
 
-function generateDocumentationFromFiles(fileNames: string[], options: CompilerOptions, docGenParams?: DocGenParams): DocEntry[] {
+function generateDocumentationFromFiles(
+    fileNames: string[],
+    options: CompilerOptions,
+    docGenParams?: DocGenParams
+): DocEntry[] {
     // Build a program using the set of root file names in fileNames
     let program = createProgram(fileNames, options);
 
@@ -85,12 +93,12 @@ function visit(checker: TypeChecker, node: Node, docGenParams?: DocGenParams) {
     if (isClassDeclaration(node) && node.name) {
         // This is a top level class, get its symbol
         const symbol = checker.getSymbolAtLocation(node.name);
-        const docContext:DocEntryContext = {
+        const docContext: DocEntryContext = {
             serialisedTypes: [],
             checker,
             maxDepth: docGenParams && docGenParams.maxDepth ? docGenParams.maxDepth : 5,
-            maxProps: docGenParams && docGenParams.maxProps ? docGenParams.maxProps : 30
-        }
+            maxProps: docGenParams && docGenParams.maxProps ? docGenParams.maxProps : 30,
+        };
 
         if (symbol) {
             output.push(serializeClass(docContext, symbol));
@@ -106,7 +114,7 @@ function visit(checker: TypeChecker, node: Node, docGenParams?: DocGenParams) {
 }
 
 /** Serialize a symbol into a json object */
-function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | DocEntryType[] {
+function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     const name = docContext.checker.typeToString(type);
     const symbol = type.symbol;
     const documentation = symbol
@@ -120,14 +128,17 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | 
 
     // We've already serialised the type in this stack
     // This is needed to prevent infinite loop on recursive or circular depencency types
-    if (docContext.serialisedTypes.includes(type) || docContext.serialisedTypes.length > docContext.maxDepth) {
-        return [];
+    if (
+        docContext.serialisedTypes.includes(type) ||
+        docContext.serialisedTypes.length > docContext.maxDepth
+    ) {
+        return null;
     }
 
     // We don't want to mutate the context as it's shared
     const newDocContext = {
         ...docContext,
-        serialisedTypes: [...docContext.serialisedTypes, type]
+        serialisedTypes: [...docContext.serialisedTypes, type],
     };
 
     // In TS booleans behave like enums so we need to filter them out earlier
@@ -137,7 +148,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | 
             type: 'boolean',
             documentation,
             value: 'true | false',
-        } as DocEntryType;
+        };
     }
 
     if (isArray(type, checker)) {
@@ -148,7 +159,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | 
             value: type.typeArguments
                 ? type.typeArguments.map(serializeType.bind(null, newDocContext))
                 : 'none',
-        } as DocEntryType;
+        };
     }
 
     if (isFunction(type)) {
@@ -157,7 +168,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | 
             type: 'function',
             documentation,
             value: type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
-        } as DocEntryType;
+        };
     }
 
     // Regular union or intersection enums
@@ -167,7 +178,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | 
             type: 'enum',
             documentation,
             value: type.types.map(serializeType.bind(null, newDocContext)),
-        } as DocEntryType;
+        };
     }
 
     // 'as const' or other types like that @todo
@@ -176,8 +187,10 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | 
             name,
             type: 'enum',
             documentation,
-            value: (type as ObservedType).typeArguments!.map(serializeType.bind(null, newDocContext)),
-        } as DocEntryType;
+            value: (type as ObservedType).typeArguments!.map(
+                serializeType.bind(null, newDocContext)
+            ),
+        };
     }
 
     if (!symbol || type.isLiteral()) {
@@ -218,34 +231,22 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | 
         throw new Error(`Expected type to have some properties: ${name}`);
     }
 
-    const tooManyProps = properties.length > newDocContext.maxProps;
-
     const foundType: DocEntryType[] = [];
 
-    properties.forEach(property => {
-        if (property.valueDeclaration) {
-            const memberType = checker.getTypeOfSymbolAtLocation(property, property.valueDeclaration);
+    // Check if max number of props has exceeded
+    const tooManyProps = properties.length > newDocContext.maxProps;
+    if (!tooManyProps) {
+        properties.forEach(symbol => {
+            foundType.push(serializeSymbol(docContext, symbol));
+        });
+    }
 
-            (foundType as DocEntryType[]).push({
-                name: property.getName(),
-                type: checker.typeToString(memberType),
-                documentation: displayPartsToString(property.getDocumentationComment(checker)),
-                isOptional: isOptional(property),
-                value: tooManyProps ? [] : serializeType(newDocContext, memberType),
-            });
-        }
-        else if (isObservedSymbol(property)) {
-            (foundType as DocEntryType[]).push({
-                name: property.getName(),
-                type: checker.typeToString(property.nameType),
-                documentation: displayPartsToString(property.getDocumentationComment(checker)),
-                isOptional: isOptional(property),
-                value: tooManyProps ? [] : serializeType(newDocContext, property.type),
-            });
-        }
-    });
-
-    return foundType;
+    return {
+        name,
+        type: 'shape',
+        documentation,
+        value: foundType,
+    };
 }
 
 /** Serialize a symbol into a json object */
@@ -255,16 +256,14 @@ function serializeSymbol(docContext: DocEntryContext, symbol: Symbol): DocEntryT
     }
 
     const type = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
-    const name = docContext.checker.typeToString(type);
     const documentation = displayPartsToString(symbol.getDocumentationComment(docContext.checker));
 
     return {
-        name,
-        type: name,
+        ...serializeType(docContext, type),
         documentation,
         isOptional: isOptional(symbol),
-        value: serializeType(docContext, type),
-    };
+        name: symbol.getName(),
+    } as DocEntryType;
 }
 
 /** Serialize a class symbol information */
@@ -276,7 +275,10 @@ function serializeClass(docContext: DocEntryContext, symbol: Symbol) {
     } as DocEntry;
 
     // Get the construct signatures
-    let constructorType = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
+    let constructorType = docContext.checker.getTypeOfSymbolAtLocation(
+        symbol,
+        symbol.valueDeclaration
+    );
     details.constructors = constructorType
         .getConstructSignatures()
         .map(serializeSignature.bind(null, docContext));
@@ -315,7 +317,9 @@ function isFunction(type: Type) {
 }
 
 function isObservedSymbol(symbol: Symbol): symbol is ObservedSymbol {
-    return Boolean(symbol && (symbol as ObservedSymbol).type && (symbol as ObservedSymbol).nameType);
+    return Boolean(
+        symbol && (symbol as ObservedSymbol).type && (symbol as ObservedSymbol).nameType
+    );
 }
 
 function isOptional(symbol: Symbol) {
@@ -342,7 +346,7 @@ export type DocEntryType = {
     value: DocEntryType | DocEntryType[] | DocEntry | DocEntry[] | string | number;
     type: string;
     isOptional?: boolean;
-};
+} | null;
 
 interface ObservedType extends Type {
     intrinsicName?: string;
@@ -357,4 +361,4 @@ interface ObservedSymbol extends Symbol {
 type DocGenParams = {
     maxDepth?: number;
     maxProps?: number;
-}
+};

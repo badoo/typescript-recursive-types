@@ -19,7 +19,7 @@ declare type DocEntryContext = {
 declare function generateDocumentationFromNode(checker: TypeChecker, node: Node, docGenParams?: DocGenParams): DocEntry[];
 declare function generateDocumentationFromFiles(fileNames: string[], options: CompilerOptions, docGenParams?: DocGenParams): DocEntry[];
 /** Serialize a symbol into a json object */
-declare function serializeType(docContext: DocEntryContext, type: Type): DocEntryType | DocEntryType[];
+declare function serializeType(docContext: DocEntryContext, type: Type): DocEntryType;
 /** Serialize a symbol into a json object */
 declare function serializeSymbol(docContext: DocEntryContext, symbol: Symbol): DocEntryType;
 /** Serialize a class symbol information */
@@ -41,7 +41,7 @@ export declare type DocEntryType = {
     value: DocEntryType | DocEntryType[] | DocEntry | DocEntry[] | string | number;
     type: string;
     isOptional?: boolean;
-};
+} | null;
 declare type DocGenParams = {
     maxDepth?: number;
     maxProps?: number;
