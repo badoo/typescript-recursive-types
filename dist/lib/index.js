@@ -82,8 +82,9 @@ function visit(checker, node, docGenParams) {
 }
 /** Serialize a symbol into a json object */
 function serializeType(docContext, type) {
-    var name = docContext.checker.typeToString(type);
+    var typeName = docContext.checker.typeToString(type);
     var symbol = type.symbol;
+    var name = symbol ? symbol.getName() : typeName;
     var documentation = symbol
         ? typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker))
         : '';
@@ -92,7 +93,7 @@ function serializeType(docContext, type) {
     // This is needed to prevent infinite loop on recursive or circular depencency types
     var stopNestingTypes = docContext.serialisedTypes.includes(type) || docContext.serialisedTypes.length > docContext.maxDepth;
     if (__DEBUG__) {
-        console.log('Type', name);
+        console.log('Type', typeName);
     }
     // We don't want to mutate the context as it's shared
     var newDocContext = __assign(__assign({}, docContext), { serialisedTypes: __spreadArrays(docContext.serialisedTypes, [type]) });
@@ -100,6 +101,7 @@ function serializeType(docContext, type) {
     if (isBoolean(type)) {
         return {
             name: name,
+            typeName: typeName,
             type: 'boolean',
             documentation: documentation,
             value: 'true | false',
@@ -108,6 +110,7 @@ function serializeType(docContext, type) {
     if (isArray(type, checker)) {
         return {
             name: name,
+            typeName: typeName,
             type: 'array',
             documentation: documentation,
             value: stopNestingTypes ? [] : (type.typeArguments
@@ -118,6 +121,7 @@ function serializeType(docContext, type) {
     if (isFunction(type)) {
         return {
             name: name,
+            typeName: typeName,
             type: 'function',
             documentation: documentation,
             value: stopNestingTypes ? [] : type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
@@ -127,6 +131,7 @@ function serializeType(docContext, type) {
     if (type.isUnionOrIntersection()) {
         return {
             name: name,
+            typeName: typeName,
             type: 'enum',
             documentation: documentation,
             value: stopNestingTypes ? [] : type.types.map(serializeType.bind(null, newDocContext)),
@@ -136,6 +141,7 @@ function serializeType(docContext, type) {
     if (type.typeArguments) {
         return {
             name: name,
+            typeName: typeName,
             type: 'enum',
             documentation: documentation,
             value: stopNestingTypes ? [] : (type.typeArguments.map(serializeType.bind(null, newDocContext))),
@@ -160,12 +166,12 @@ function serializeType(docContext, type) {
             value = type.intrinsicName;
             detectedType = 'string';
         }
-        var typeName = symbol ? symbol.getName() : name;
         if (typeName === 'any' && value === 'any') {
             detectedType = 'any';
         }
         return {
-            name: typeName,
+            name: name,
+            typeName: typeName,
             type: detectedType,
             documentation: documentation,
             value: value,
@@ -173,7 +179,7 @@ function serializeType(docContext, type) {
     }
     var properties = type.getProperties();
     if (!properties) {
-        throw new Error("Expected type to have some properties: " + name);
+        throw new Error("Expected type to have some properties: " + typeName);
     }
     var mappedProperties = [];
     // Check if max number of props has exceeded
@@ -185,6 +191,7 @@ function serializeType(docContext, type) {
     }
     return {
         name: name,
+        typeName: typeName,
         type: 'shape',
         documentation: documentation,
         value: mappedProperties,

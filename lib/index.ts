@@ -115,8 +115,9 @@ function visit(checker: TypeChecker, node: Node, docGenParams?: DocGenParams) {
 
 /** Serialize a symbol into a json object */
 function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
-    const name = docContext.checker.typeToString(type);
+    const typeName = docContext.checker.typeToString(type);
     const symbol = type.symbol;
+    const name = symbol ? symbol.getName() : typeName;
     const documentation = symbol
         ? displayPartsToString(symbol.getDocumentationComment(docContext.checker))
         : '';
@@ -127,7 +128,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     const stopNestingTypes = docContext.serialisedTypes.includes(type) || docContext.serialisedTypes.length > docContext.maxDepth;
 
     if (__DEBUG__) {
-        console.log('Type', name);
+        console.log('Type', typeName);
     }
 
     // We don't want to mutate the context as it's shared
@@ -140,6 +141,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     if (isBoolean(type)) {
         return {
             name,
+            typeName,
             type: 'boolean',
             documentation,
             value: 'true | false',
@@ -149,6 +151,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     if (isArray(type, checker)) {
         return {
             name,
+            typeName,
             type: 'array',
             documentation,
             value: stopNestingTypes ? [] : (type.typeArguments
@@ -160,6 +163,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     if (isFunction(type)) {
         return {
             name,
+            typeName,
             type: 'function',
             documentation,
             value: stopNestingTypes ? [] : type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
@@ -170,6 +174,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     if (type.isUnionOrIntersection()) {
         return {
             name,
+            typeName,
             type: 'enum',
             documentation,
             value: stopNestingTypes ? [] : type.types.map(serializeType.bind(null, newDocContext)),
@@ -180,6 +185,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     if ((type as ObservedType).typeArguments) {
         return {
             name,
+            typeName,
             type: 'enum',
             documentation,
             value: stopNestingTypes ? [] : ((type as ObservedType).typeArguments!.map(
@@ -206,14 +212,13 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
             detectedType = 'string';
         }
 
-        const typeName = symbol ? symbol.getName() : name;
-
         if (typeName === 'any' && value === 'any') {
             detectedType = 'any';
         }
 
         return {
-            name: typeName,
+            name,
+            typeName,
             type: detectedType,
             documentation,
             value,
@@ -223,7 +228,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     const properties = type.getProperties();
 
     if (!properties) {
-        throw new Error(`Expected type to have some properties: ${name}`);
+        throw new Error(`Expected type to have some properties: ${typeName}`);
     }
 
     const mappedProperties: DocEntryType[] = [];
@@ -238,6 +243,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
 
     return {
         name,
+        typeName,
         type: 'shape',
         documentation,
         value: mappedProperties,
@@ -258,7 +264,7 @@ function serializeSymbol(docContext: DocEntryContext, symbol: Symbol): DocEntryT
         documentation,
         isOptional: isOptional(symbol),
         name: symbol.getName(),
-    } as DocEntryType;
+    };
 }
 
 /** Serialize a class symbol information */
@@ -337,7 +343,8 @@ export interface DocEntry {
 
 export type DocEntryType = {
     documentation?: string;
-    name: string;
+    name?: string;
+    typeName?: string;
     value: DocEntryType | DocEntryType[] | DocEntry | DocEntry[] | string | number;
     type: string;
     isOptional?: boolean;

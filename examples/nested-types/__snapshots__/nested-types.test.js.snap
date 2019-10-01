@@ -12,24 +12,28 @@ Array [
             "isOptional": false,
             "name": "a",
             "type": "shape",
+            "typeName": "Props",
             "value": Array [
               Object {
                 "documentation": "gallery description",
                 "isOptional": false,
                 "name": "gallery",
                 "type": "shape",
+                "typeName": "Gallery",
                 "value": Array [
                   Object {
                     "documentation": "mainImage description",
                     "isOptional": false,
                     "name": "mainImage",
                     "type": "shape",
+                    "typeName": "Image",
                     "value": Array [
                       Object {
                         "documentation": "src description",
                         "isOptional": false,
                         "name": "src",
                         "type": "string",
+                        "typeName": "string",
                         "value": "string",
                       },
                       Object {
@@ -37,6 +41,7 @@ Array [
                         "isOptional": false,
                         "name": "showLoading",
                         "type": "boolean",
+                        "typeName": "boolean",
                         "value": "true | false",
                       },
                       Object {
@@ -44,23 +49,27 @@ Array [
                         "isOptional": false,
                         "name": "imgType",
                         "type": "enum",
+                        "typeName": "ImageType",
                         "value": Array [
                           Object {
                             "documentation": "JPG description",
                             "name": "JPG",
                             "type": "number",
+                            "typeName": "ImageType.JPG",
                             "value": 0,
                           },
                           Object {
                             "documentation": "WEBP description",
                             "name": "WEBP",
                             "type": "number",
+                            "typeName": "ImageType.WEBP",
                             "value": 1,
                           },
                           Object {
                             "documentation": "GIF description",
                             "name": "GIF",
                             "type": "string",
+                            "typeName": "ImageType.GIF",
                             "value": "\\"gif\\"",
                           },
                         ],
@@ -72,17 +81,20 @@ Array [
                     "isOptional": false,
                     "name": "pages",
                     "type": "array",
+                    "typeName": "Page[]",
                     "value": Array [
                       Object {
                         "documentation": "",
-                        "name": "Page",
+                        "name": "__type",
                         "type": "shape",
+                        "typeName": "Page",
                         "value": Array [
                           Object {
                             "documentation": "index description",
                             "isOptional": false,
                             "name": "index",
                             "type": "string",
+                            "typeName": "number",
                             "value": "number",
                           },
                           Object {
@@ -90,12 +102,14 @@ Array [
                             "isOptional": false,
                             "name": "image",
                             "type": "shape",
+                            "typeName": "Image",
                             "value": Array [
                               Object {
                                 "documentation": "src description",
                                 "isOptional": false,
                                 "name": "src",
                                 "type": "string",
+                                "typeName": "string",
                                 "value": "string",
                               },
                               Object {
@@ -103,6 +117,7 @@ Array [
                                 "isOptional": false,
                                 "name": "showLoading",
                                 "type": "boolean",
+                                "typeName": "boolean",
                                 "value": "true | false",
                               },
                               Object {
@@ -110,23 +125,27 @@ Array [
                                 "isOptional": false,
                                 "name": "imgType",
                                 "type": "enum",
+                                "typeName": "ImageType",
                                 "value": Array [
                                   Object {
                                     "documentation": "JPG description",
                                     "name": "JPG",
                                     "type": "number",
+                                    "typeName": "ImageType.JPG",
                                     "value": 0,
                                   },
                                   Object {
                                     "documentation": "WEBP description",
                                     "name": "WEBP",
                                     "type": "number",
+                                    "typeName": "ImageType.WEBP",
                                     "value": 1,
                                   },
                                   Object {
                                     "documentation": "GIF description",
                                     "name": "GIF",
                                     "type": "string",
+                                    "typeName": "ImageType.GIF",
                                     "value": "\\"gif\\"",
                                   },
                                 ],
@@ -144,6 +163,7 @@ Array [
                 "isOptional": false,
                 "name": "test",
                 "type": "array",
+                "typeName": "[]",
                 "value": "none",
               },
               Object {
@@ -151,11 +171,13 @@ Array [
                 "isOptional": false,
                 "name": "test2",
                 "type": "array",
+                "typeName": "any[]",
                 "value": Array [
                   Object {
                     "documentation": "",
                     "name": "any",
                     "type": "any",
+                    "typeName": "any",
                     "value": "any",
                   },
                 ],
@@ -165,41 +187,48 @@ Array [
                 "isOptional": true,
                 "name": "constProp",
                 "type": "enum",
+                "typeName": "readonly [\\"name\\", \\"message\\", \\"number\\", \\"fileName\\", \\"lineno\\", \\"colno\\"]",
                 "value": Array [
                   Object {
                     "documentation": "",
                     "name": "\\"name\\"",
                     "type": "string",
+                    "typeName": "\\"name\\"",
                     "value": "\\"name\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"message\\"",
                     "type": "string",
+                    "typeName": "\\"message\\"",
                     "value": "\\"message\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"number\\"",
                     "type": "string",
+                    "typeName": "\\"number\\"",
                     "value": "\\"number\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"fileName\\"",
                     "type": "string",
+                    "typeName": "\\"fileName\\"",
                     "value": "\\"fileName\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"lineno\\"",
                     "type": "string",
+                    "typeName": "\\"lineno\\"",
                     "value": "\\"lineno\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"colno\\"",
                     "type": "string",
+                    "typeName": "\\"colno\\"",
                     "value": "\\"colno\\"",
                   },
                 ],
@@ -209,6 +238,7 @@ Array [
                 "isOptional": true,
                 "name": "showPage",
                 "type": "function",
+                "typeName": "{ (page: Page): boolean; (page: Page, isDefault: boolean): boolean; }",
                 "value": Array [
                   Object {
                     "documentation": "",
@@ -218,12 +248,14 @@ Array [
                         "isOptional": false,
                         "name": "page",
                         "type": "shape",
+                        "typeName": "Page",
                         "value": Array [
                           Object {
                             "documentation": "index description",
                             "isOptional": false,
                             "name": "index",
                             "type": "string",
+                            "typeName": "number",
                             "value": "number",
                           },
                           Object {
@@ -231,12 +263,14 @@ Array [
                             "isOptional": false,
                             "name": "image",
                             "type": "shape",
+                            "typeName": "Image",
                             "value": Array [
                               Object {
                                 "documentation": "src description",
                                 "isOptional": false,
                                 "name": "src",
                                 "type": "string",
+                                "typeName": "string",
                                 "value": "string",
                               },
                               Object {
@@ -244,6 +278,7 @@ Array [
                                 "isOptional": false,
                                 "name": "showLoading",
                                 "type": "boolean",
+                                "typeName": "boolean",
                                 "value": "true | false",
                               },
                               Object {
@@ -251,23 +286,27 @@ Array [
                                 "isOptional": false,
                                 "name": "imgType",
                                 "type": "enum",
+                                "typeName": "ImageType",
                                 "value": Array [
                                   Object {
                                     "documentation": "JPG description",
                                     "name": "JPG",
                                     "type": "number",
+                                    "typeName": "ImageType.JPG",
                                     "value": 0,
                                   },
                                   Object {
                                     "documentation": "WEBP description",
                                     "name": "WEBP",
                                     "type": "number",
+                                    "typeName": "ImageType.WEBP",
                                     "value": 1,
                                   },
                                   Object {
                                     "documentation": "GIF description",
                                     "name": "GIF",
                                     "type": "string",
+                                    "typeName": "ImageType.GIF",
                                     "value": "\\"gif\\"",
                                   },
                                 ],
@@ -287,12 +326,14 @@ Array [
                         "isOptional": false,
                         "name": "page",
                         "type": "shape",
+                        "typeName": "Page",
                         "value": Array [
                           Object {
                             "documentation": "index description",
                             "isOptional": false,
                             "name": "index",
                             "type": "string",
+                            "typeName": "number",
                             "value": "number",
                           },
                           Object {
@@ -300,12 +341,14 @@ Array [
                             "isOptional": false,
                             "name": "image",
                             "type": "shape",
+                            "typeName": "Image",
                             "value": Array [
                               Object {
                                 "documentation": "src description",
                                 "isOptional": false,
                                 "name": "src",
                                 "type": "string",
+                                "typeName": "string",
                                 "value": "string",
                               },
                               Object {
@@ -313,6 +356,7 @@ Array [
                                 "isOptional": false,
                                 "name": "showLoading",
                                 "type": "boolean",
+                                "typeName": "boolean",
                                 "value": "true | false",
                               },
                               Object {
@@ -320,23 +364,27 @@ Array [
                                 "isOptional": false,
                                 "name": "imgType",
                                 "type": "enum",
+                                "typeName": "ImageType",
                                 "value": Array [
                                   Object {
                                     "documentation": "JPG description",
                                     "name": "JPG",
                                     "type": "number",
+                                    "typeName": "ImageType.JPG",
                                     "value": 0,
                                   },
                                   Object {
                                     "documentation": "WEBP description",
                                     "name": "WEBP",
                                     "type": "number",
+                                    "typeName": "ImageType.WEBP",
                                     "value": 1,
                                   },
                                   Object {
                                     "documentation": "GIF description",
                                     "name": "GIF",
                                     "type": "string",
+                                    "typeName": "ImageType.GIF",
                                     "value": "\\"gif\\"",
                                   },
                                 ],
@@ -350,6 +398,7 @@ Array [
                         "isOptional": false,
                         "name": "isDefault",
                         "type": "boolean",
+                        "typeName": "boolean",
                         "value": "true | false",
                       },
                     ],
@@ -362,12 +411,14 @@ Array [
                 "isOptional": true,
                 "name": "report",
                 "type": "shape",
+                "typeName": "ErrorReport",
                 "value": Array [
                   Object {
                     "documentation": "",
                     "isOptional": true,
                     "name": "number",
                     "type": "string",
+                    "typeName": "any",
                     "value": "error",
                   },
                   Object {
@@ -375,6 +426,7 @@ Array [
                     "isOptional": true,
                     "name": "name",
                     "type": "string",
+                    "typeName": "any",
                     "value": "error",
                   },
                   Object {
@@ -382,6 +434,7 @@ Array [
                     "isOptional": true,
                     "name": "message",
                     "type": "string",
+                    "typeName": "any",
                     "value": "error",
                   },
                   Object {
@@ -389,6 +442,7 @@ Array [
                     "isOptional": true,
                     "name": "fileName",
                     "type": "string",
+                    "typeName": "any",
                     "value": "error",
                   },
                   Object {
@@ -396,6 +450,7 @@ Array [
                     "isOptional": true,
                     "name": "lineno",
                     "type": "string",
+                    "typeName": "any",
                     "value": "error",
                   },
                   Object {
@@ -403,6 +458,7 @@ Array [
                     "isOptional": true,
                     "name": "colno",
                     "type": "string",
+                    "typeName": "any",
                     "value": "error",
                   },
                 ],
@@ -412,23 +468,27 @@ Array [
                 "isOptional": true,
                 "name": "optional",
                 "type": "enum",
+                "typeName": "boolean | 123",
                 "value": Array [
                   Object {
                     "documentation": "",
                     "name": "false",
                     "type": "boolean",
+                    "typeName": "false",
                     "value": "undefined",
                   },
                   Object {
                     "documentation": "",
                     "name": "true",
                     "type": "boolean",
+                    "typeName": "true",
                     "value": "undefined",
                   },
                   Object {
                     "documentation": "",
                     "name": "123",
                     "type": "number",
+                    "typeName": "123",
                     "value": 123,
                   },
                 ],
@@ -446,12 +506,14 @@ Array [
       "isOptional": false,
       "name": "default",
       "type": "shape",
+      "typeName": "typeof Component",
       "value": Array [
         Object {
           "documentation": "",
           "isOptional": false,
           "name": "prototype",
           "type": "string",
+          "typeName": "any",
           "value": "error",
         },
       ],

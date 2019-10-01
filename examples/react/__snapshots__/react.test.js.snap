@@ -12,47 +12,55 @@ Array [
             "isOptional": false,
             "name": "props",
             "type": "shape",
+            "typeName": "Props",
             "value": Array [
               Object {
                 "documentation": "The type of button",
                 "isOptional": true,
                 "name": "type",
                 "type": "enum",
+                "typeName": "\\"filled\\" | \\"stroke\\" | \\"transparent\\" | \\"semitransparent\\" | \\"monochrome\\" | \\"link\\"",
                 "value": Array [
                   Object {
                     "documentation": "",
                     "name": "\\"filled\\"",
                     "type": "string",
+                    "typeName": "\\"filled\\"",
                     "value": "\\"filled\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"stroke\\"",
                     "type": "string",
+                    "typeName": "\\"stroke\\"",
                     "value": "\\"stroke\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"transparent\\"",
                     "type": "string",
+                    "typeName": "\\"transparent\\"",
                     "value": "\\"transparent\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"semitransparent\\"",
                     "type": "string",
+                    "typeName": "\\"semitransparent\\"",
                     "value": "\\"semitransparent\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"monochrome\\"",
                     "type": "string",
+                    "typeName": "\\"monochrome\\"",
                     "value": "\\"monochrome\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"link\\"",
                     "type": "string",
+                    "typeName": "\\"link\\"",
                     "value": "\\"link\\"",
                   },
                 ],
@@ -62,6 +70,7 @@ Array [
                 "isOptional": true,
                 "name": "narrow",
                 "type": "boolean",
+                "typeName": "boolean",
                 "value": "true | false",
               },
               Object {
@@ -69,29 +78,34 @@ Array [
                 "isOptional": true,
                 "name": "color",
                 "type": "enum",
+                "typeName": "false | \\"primary\\" | \\"secondary\\" | \\"generic-red\\"",
                 "value": Array [
                   Object {
                     "documentation": "",
                     "name": "false",
                     "type": "boolean",
+                    "typeName": "false",
                     "value": "undefined",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"primary\\"",
                     "type": "string",
+                    "typeName": "\\"primary\\"",
                     "value": "\\"primary\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"secondary\\"",
                     "type": "string",
+                    "typeName": "\\"secondary\\"",
                     "value": "\\"secondary\\"",
                   },
                   Object {
                     "documentation": "",
                     "name": "\\"generic-red\\"",
                     "type": "string",
+                    "typeName": "\\"generic-red\\"",
                     "value": "\\"generic-red\\"",
                   },
                 ],
@@ -101,63 +115,74 @@ Array [
                 "isOptional": false,
                 "name": "icon",
                 "type": "enum",
+                "typeName": "ReactNode",
                 "value": Array [
                   Object {
                     "documentation": "",
                     "name": "string",
                     "type": "string",
+                    "typeName": "string",
                     "value": "string",
                   },
                   Object {
                     "documentation": "",
                     "name": "number",
                     "type": "string",
+                    "typeName": "number",
                     "value": "number",
                   },
                   Object {
                     "documentation": "",
                     "name": "false",
                     "type": "boolean",
+                    "typeName": "false",
                     "value": "undefined",
                   },
                   Object {
                     "documentation": "",
                     "name": "true",
                     "type": "boolean",
+                    "typeName": "true",
                     "value": "undefined",
                   },
                   Object {
                     "documentation": "",
-                    "name": "{}",
+                    "name": "__type",
                     "type": "shape",
+                    "typeName": "{}",
                     "value": Array [],
                   },
                   Object {
                     "documentation": "",
-                    "name": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)>",
+                    "name": "ReactElement",
                     "type": "enum",
+                    "typeName": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)>",
                     "value": Array [
                       Object {
                         "documentation": "",
                         "name": "any",
                         "type": "any",
+                        "typeName": "any",
                         "value": "any",
                       },
                       Object {
                         "documentation": "",
                         "name": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
                         "type": "enum",
+                        "typeName": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
                         "value": Array [
                           Object {
                             "documentation": "",
                             "name": "string",
                             "type": "string",
+                            "typeName": "string",
                             "value": "string",
                           },
                           Object {
                             "documentation": "",
-                            "name": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "name": "__type",
                             "type": "function",
+                            "typeName": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
                             "value": Array [
                               Object {
                                 "documentation": "",
@@ -167,6 +192,7 @@ Array [
                                     "isOptional": false,
                                     "name": "props",
                                     "type": "any",
+                                    "typeName": "any",
                                     "value": "any",
                                   },
                                 ],
@@ -176,8 +202,9 @@ Array [
                           },
                           Object {
                             "documentation": "",
-                            "name": "new (props: any) => Component<any, any, any>",
+                            "name": "__type",
                             "type": "shape",
+                            "typeName": "new (props: any) => Component<any, any, any>",
                             "value": Array [],
                           },
                         ],
@@ -188,29 +215,34 @@ Array [
                     "documentation": "",
                     "name": "ReactNodeArray",
                     "type": "shape",
+                    "typeName": "ReactNodeArray",
                     "value": Array [],
                   },
                   Object {
                     "documentation": "",
                     "name": "ReactPortal",
                     "type": "shape",
+                    "typeName": "ReactPortal",
                     "value": Array [
                       Object {
                         "documentation": "",
                         "isOptional": false,
                         "name": "key",
                         "type": "enum",
+                        "typeName": "ReactText",
                         "value": Array [
                           Object {
                             "documentation": "",
                             "name": "string",
                             "type": "string",
+                            "typeName": "string",
                             "value": "string",
                           },
                           Object {
                             "documentation": "",
                             "name": "number",
                             "type": "string",
+                            "typeName": "number",
                             "value": "number",
                           },
                         ],
@@ -220,6 +252,7 @@ Array [
                         "isOptional": false,
                         "name": "children",
                         "type": "enum",
+                        "typeName": "ReactNode",
                         "value": Array [],
                       },
                       Object {
@@ -227,17 +260,20 @@ Array [
                         "isOptional": false,
                         "name": "type",
                         "type": "enum",
+                        "typeName": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
                         "value": Array [
                           Object {
                             "documentation": "",
                             "name": "string",
                             "type": "string",
+                            "typeName": "string",
                             "value": "string",
                           },
                           Object {
                             "documentation": "",
-                            "name": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "name": "__type",
                             "type": "function",
+                            "typeName": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
                             "value": Array [
                               Object {
                                 "documentation": "",
@@ -247,6 +283,7 @@ Array [
                                     "isOptional": false,
                                     "name": "props",
                                     "type": "any",
+                                    "typeName": "any",
                                     "value": "any",
                                   },
                                 ],
@@ -256,8 +293,9 @@ Array [
                           },
                           Object {
                             "documentation": "",
-                            "name": "new (props: any) => Component<any, any, any>",
+                            "name": "__type",
                             "type": "shape",
+                            "typeName": "new (props: any) => Component<any, any, any>",
                             "value": Array [],
                           },
                         ],
@@ -267,6 +305,7 @@ Array [
                         "isOptional": false,
                         "name": "props",
                         "type": "any",
+                        "typeName": "any",
                         "value": "any",
                       },
                     ],
@@ -278,6 +317,7 @@ Array [
                 "isOptional": false,
                 "name": "text",
                 "type": "string",
+                "typeName": "string",
                 "value": "string",
               },
               Object {
@@ -285,6 +325,7 @@ Array [
                 "isOptional": false,
                 "name": "tag",
                 "type": "string",
+                "typeName": "string",
                 "value": "string",
               },
               Object {
@@ -292,6 +333,7 @@ Array [
                 "isOptional": true,
                 "name": "isDisabled",
                 "type": "boolean",
+                "typeName": "boolean",
                 "value": "true | false",
               },
               Object {
@@ -299,6 +341,7 @@ Array [
                 "isOptional": true,
                 "name": "isPressed",
                 "type": "boolean",
+                "typeName": "boolean",
                 "value": "true | false",
               },
               Object {
@@ -306,6 +349,7 @@ Array [
                 "isOptional": true,
                 "name": "isLoading",
                 "type": "boolean",
+                "typeName": "boolean",
                 "value": "true | false",
               },
               Object {
@@ -313,6 +357,7 @@ Array [
                 "isOptional": false,
                 "name": "onClick",
                 "type": "function",
+                "typeName": "(event: MouseEvent) => boolean",
                 "value": Array [
                   Object {
                     "documentation": "",
@@ -322,6 +367,7 @@ Array [
                         "isOptional": false,
                         "name": "event",
                         "type": "shape",
+                        "typeName": "MouseEvent",
                         "value": Array [],
                       },
                     ],
@@ -334,6 +380,7 @@ Array [
                 "isOptional": false,
                 "name": "onTouchStart",
                 "type": "function",
+                "typeName": "() => void",
                 "value": Array [
                   Object {
                     "documentation": "",
@@ -347,6 +394,7 @@ Array [
                 "isOptional": false,
                 "name": "onTouchEnd",
                 "type": "function",
+                "typeName": "() => void",
                 "value": Array [
                   Object {
                     "documentation": "",
@@ -368,12 +416,14 @@ Array [
       "isOptional": false,
       "name": "Button",
       "type": "shape",
+      "typeName": "typeof Button",
       "value": Array [
         Object {
           "documentation": "",
           "isOptional": false,
           "name": "prototype",
           "type": "string",
+          "typeName": "any",
           "value": "error",
         },
         Object {
@@ -381,12 +431,14 @@ Array [
           "isOptional": false,
           "name": "defaultProps",
           "type": "shape",
+          "typeName": "{ type: string; narrow: boolean; color: string; tag: string; isDisabled: boolean; isPressed: boolean; isLoading: boolean; }",
           "value": Array [
             Object {
               "documentation": "",
               "isOptional": false,
               "name": "type",
               "type": "string",
+              "typeName": "string",
               "value": "string",
             },
             Object {
@@ -394,6 +446,7 @@ Array [
               "isOptional": false,
               "name": "narrow",
               "type": "boolean",
+              "typeName": "boolean",
               "value": "true | false",
             },
             Object {
@@ -401,6 +454,7 @@ Array [
               "isOptional": false,
               "name": "color",
               "type": "string",
+              "typeName": "string",
               "value": "string",
             },
             Object {
@@ -408,6 +462,7 @@ Array [
               "isOptional": false,
               "name": "tag",
               "type": "string",
+              "typeName": "string",
               "value": "string",
             },
             Object {
@@ -415,6 +470,7 @@ Array [
               "isOptional": false,
               "name": "isDisabled",
               "type": "boolean",
+              "typeName": "boolean",
               "value": "true | false",
             },
             Object {
@@ -422,6 +478,7 @@ Array [
               "isOptional": false,
               "name": "isPressed",
               "type": "boolean",
+              "typeName": "boolean",
               "value": "true | false",
             },
             Object {
@@ -429,6 +486,7 @@ Array [
               "isOptional": false,
               "name": "isLoading",
               "type": "boolean",
+              "typeName": "boolean",
               "value": "true | false",
             },
           ],
@@ -453,11 +511,13 @@ class Foo extends React.Component {
           "isOptional": true,
           "name": "contextType",
           "type": "enum",
+          "typeName": "Context<any>",
           "value": Array [
             Object {
               "documentation": "",
               "name": "any",
               "type": "any",
+              "typeName": "any",
               "value": "any",
             },
           ],
