@@ -122,17 +122,12 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
         : '';
     const checker = docContext.checker;
 
-    if (__DEBUG__) {
-        console.log('Type', name);
-    }
-
     // We've already serialised the type in this stack
     // This is needed to prevent infinite loop on recursive or circular depencency types
-    if (
-        docContext.serialisedTypes.includes(type) ||
-        docContext.serialisedTypes.length > docContext.maxDepth
-    ) {
-        return null;
+    const stopNestingTypes = docContext.serialisedTypes.includes(type) || docContext.serialisedTypes.length > docContext.maxDepth;
+
+    if (__DEBUG__) {
+        console.log('Type', name);
     }
 
     // We don't want to mutate the context as it's shared
@@ -156,9 +151,9 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
             name,
             type: 'array',
             documentation,
-            value: type.typeArguments
+            value: stopNestingTypes ? [] : (type.typeArguments
                 ? type.typeArguments.map(serializeType.bind(null, newDocContext))
-                : 'none',
+                : 'none'),
         };
     }
 
@@ -167,7 +162,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
             name,
             type: 'function',
             documentation,
-            value: type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
+            value: stopNestingTypes ? [] : type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
         };
     }
 
@@ -177,7 +172,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
             name,
             type: 'enum',
             documentation,
-            value: type.types.map(serializeType.bind(null, newDocContext)),
+            value: stopNestingTypes ? [] : type.types.map(serializeType.bind(null, newDocContext)),
         };
     }
 
@@ -187,8 +182,8 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
             name,
             type: 'enum',
             documentation,
-            value: (type as ObservedType).typeArguments!.map(
-                serializeType.bind(null, newDocContext)
+            value: stopNestingTypes ? [] : ((type as ObservedType).typeArguments!.map(
+                serializeType.bind(null, newDocContext))
             ),
         };
     }
@@ -231,13 +226,13 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
         throw new Error(`Expected type to have some properties: ${name}`);
     }
 
-    const foundType: DocEntryType[] = [];
+    const mappedProperties: DocEntryType[] = [];
 
     // Check if max number of props has exceeded
-    const tooManyProps = properties.length > newDocContext.maxProps;
-    if (!tooManyProps) {
+    const avoidNestingProperties = properties.length <= newDocContext.maxProps || stopNestingTypes;
+    if (avoidNestingProperties) {
         properties.forEach(symbol => {
-            foundType.push(serializeSymbol(docContext, symbol));
+            mappedProperties.push(serializeSymbol(docContext, symbol));
         });
     }
 
@@ -245,7 +240,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
         name,
         type: 'shape',
         documentation,
-        value: foundType,
+        value: mappedProperties,
     };
 }
 
@@ -346,7 +341,7 @@ export type DocEntryType = {
     value: DocEntryType | DocEntryType[] | DocEntry | DocEntry[] | string | number;
     type: string;
     isOptional?: boolean;
-} | null;
+};
 
 interface ObservedType extends Type {
     intrinsicName?: string;

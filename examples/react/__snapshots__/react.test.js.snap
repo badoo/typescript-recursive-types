@@ -219,6 +219,8 @@ Array [
                         "documentation": "",
                         "isOptional": false,
                         "name": "children",
+                        "type": "enum",
+                        "value": Array [],
                       },
                       Object {
                         "documentation": "",

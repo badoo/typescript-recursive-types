@@ -41,7 +41,7 @@ export declare type DocEntryType = {
     value: DocEntryType | DocEntryType[] | DocEntry | DocEntry[] | string | number;
     type: string;
     isOptional?: boolean;
-} | null;
+};
 declare type DocGenParams = {
     maxDepth?: number;
     maxProps?: number;

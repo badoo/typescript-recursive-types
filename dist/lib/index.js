@@ -88,14 +88,11 @@ function serializeType(docContext, type) {
         ? typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker))
         : '';
     var checker = docContext.checker;
-    if (__DEBUG__) {
-        console.log('Type', name);
-    }
     // We've already serialised the type in this stack
     // This is needed to prevent infinite loop on recursive or circular depencency types
-    if (docContext.serialisedTypes.includes(type) ||
-        docContext.serialisedTypes.length > docContext.maxDepth) {
-        return null;
+    var stopNestingTypes = docContext.serialisedTypes.includes(type) || docContext.serialisedTypes.length > docContext.maxDepth;
+    if (__DEBUG__) {
+        console.log('Type', name);
     }
     // We don't want to mutate the context as it's shared
     var newDocContext = __assign(__assign({}, docContext), { serialisedTypes: __spreadArrays(docContext.serialisedTypes, [type]) });
@@ -113,9 +110,9 @@ function serializeType(docContext, type) {
             name: name,
             type: 'array',
             documentation: documentation,
-            value: type.typeArguments
+            value: stopNestingTypes ? [] : (type.typeArguments
                 ? type.typeArguments.map(serializeType.bind(null, newDocContext))
-                : 'none',
+                : 'none'),
         };
     }
     if (isFunction(type)) {
@@ -123,7 +120,7 @@ function serializeType(docContext, type) {
             name: name,
             type: 'function',
             documentation: documentation,
-            value: type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
+            value: stopNestingTypes ? [] : type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
         };
     }
     // Regular union or intersection enums
@@ -132,7 +129,7 @@ function serializeType(docContext, type) {
             name: name,
             type: 'enum',
             documentation: documentation,
-            value: type.types.map(serializeType.bind(null, newDocContext)),
+            value: stopNestingTypes ? [] : type.types.map(serializeType.bind(null, newDocContext)),
         };
     }
     // 'as const' or other types like that @todo
@@ -141,7 +138,7 @@ function serializeType(docContext, type) {
             name: name,
             type: 'enum',
             documentation: documentation,
-            value: type.typeArguments.map(serializeType.bind(null, newDocContext)),
+            value: stopNestingTypes ? [] : (type.typeArguments.map(serializeType.bind(null, newDocContext))),
         };
     }
     if (!symbol || type.isLiteral()) {
@@ -178,19 +175,19 @@ function serializeType(docContext, type) {
     if (!properties) {
         throw new Error("Expected type to have some properties: " + name);
     }
-    var foundType = [];
+    var mappedProperties = [];
     // Check if max number of props has exceeded
-    var tooManyProps = properties.length > newDocContext.maxProps;
-    if (!tooManyProps) {
+    var avoidNestingProperties = properties.length <= newDocContext.maxProps || stopNestingTypes;
+    if (avoidNestingProperties) {
         properties.forEach(function (symbol) {
-            foundType.push(serializeSymbol(docContext, symbol));
+            mappedProperties.push(serializeSymbol(docContext, symbol));
         });
     }
     return {
         name: name,
         type: 'shape',
         documentation: documentation,
-        value: foundType,
+        value: mappedProperties,
     };
 }
 exports.serializeType = serializeType;
