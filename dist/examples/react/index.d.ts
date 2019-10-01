@@ -4,20 +4,20 @@ declare type Props = {
      * The type of button
      * @notice 'monochrome' is a special button with specific pre-defined colors ('color' prop is overwritten) - 'link' is a special button with specific pre-defined font-family (system) and sizes (small/narrow)
      */
-    type: 'filled' | 'stroke' | 'transparent' | 'semitransparent' | 'monochrome' | 'link';
+    type?: 'filled' | 'stroke' | 'transparent' | 'semitransparent' | 'monochrome' | 'link';
     /**
      * If the button should fit the smallest space available ("inline")
      */
-    narrow: boolean;
+    narrow?: boolean;
     /**
      * Color applied to the button
      * @notice This is applied only to the 'filled/stroke/transparent + link' types. For 'semitransparent' the allowed values are 'primary' and 'gray'
      */
-    color: 'primary' | 'secondary' | 'generic-red' | false;
+    color?: 'primary' | 'secondary' | 'generic-red' | false;
     /**
      * Name of the icon to show inside the button
      */
-    icon: string;
+    icon: React.ReactNode;
     /**
      * Text to show inside the button
      */
@@ -29,15 +29,15 @@ declare type Props = {
     /**
      * If the button is disabled
      */
-    isDisabled: boolean;
+    isDisabled?: boolean;
     /**
      * If the button has a "pressed" visual state (if disabled, is ignored)
      */
-    isPressed: boolean;
+    isPressed?: boolean;
     /**
      * Used to overlay a "loading" state above the content
      */
-    isLoading: boolean;
+    isLoading?: boolean;
     /**
      * "onClick" handler attached to the element
      */
@@ -77,7 +77,7 @@ declare class Button extends React.Component<Props, State> {
     onTouchEnd(): void;
     render(): React.ReactElement<{
         className: string;
-        disabled: boolean;
+        disabled: boolean | undefined;
         onClick: (event: MouseEvent) => boolean;
         onTouchStart: () => void;
         onTouchEnd: () => void;

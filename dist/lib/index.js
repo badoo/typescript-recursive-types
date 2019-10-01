@@ -215,6 +215,7 @@ function serializeSymbol(docContext, symbol) {
         name: name,
         type: name,
         documentation: documentation,
+        isOptional: isOptional(symbol),
         value: serializeType(docContext, type),
     };
 }

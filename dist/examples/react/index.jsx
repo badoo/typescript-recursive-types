@@ -29,7 +29,7 @@ var Button = /** @class */ (function (_super) {
     function Button(props) {
         var _this = _super.call(this, props) || this;
         _this.state = {
-            isPressed: _this.props.isPressed,
+            isPressed: _this.props.isPressed || defaultProps.isPressed,
         };
         _this.onTouchStart = _this.onTouchStart.bind(_this);
         _this.onTouchEnd = _this.onTouchEnd.bind(_this);
@@ -82,7 +82,7 @@ var Button = /** @class */ (function (_super) {
             children: (<React.Fragment>
                     <div className="button__content">
                         {this.props.icon ? (<span className="button__icon">
-                                <Icon name={this.props.icon} size="md"/>
+                                {this.props.icon}
                             </span>) : null}
                         {this.props.text ? (<span className="button__text">
                                 {(function () {
@@ -102,11 +102,5 @@ var Button = /** @class */ (function (_super) {
     Button.defaultProps = defaultProps;
     return Button;
 }(React.Component));
-var Icon = function (_a) {
-    var name = _a.name, size = _a.size;
-    return (<div>
-            {name},{size}
-        </div>);
-};
 exports.default = Button;
 //# sourceMappingURL=index.jsx.map

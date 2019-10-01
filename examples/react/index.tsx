@@ -1,4 +1,3 @@
-import { FunctionComponent } from 'react';
 import * as React from 'react';
 import classnames from 'classnames';
 
@@ -7,20 +6,20 @@ type Props = {
      * The type of button
      * @notice 'monochrome' is a special button with specific pre-defined colors ('color' prop is overwritten) - 'link' is a special button with specific pre-defined font-family (system) and sizes (small/narrow)
      */
-    type: 'filled' | 'stroke' | 'transparent' | 'semitransparent' | 'monochrome' | 'link';
+    type?: 'filled' | 'stroke' | 'transparent' | 'semitransparent' | 'monochrome' | 'link';
     /**
      * If the button should fit the smallest space available ("inline")
      */
-    narrow: boolean;
+    narrow?: boolean;
     /**
      * Color applied to the button
      * @notice This is applied only to the 'filled/stroke/transparent + link' types. For 'semitransparent' the allowed values are 'primary' and 'gray'
      */
-    color: 'primary' | 'secondary' | 'generic-red' | false;
+    color?: 'primary' | 'secondary' | 'generic-red' | false;
     /**
      * Name of the icon to show inside the button
      */
-    icon: string;
+    icon: React.ReactNode;
     /**
      * Text to show inside the button
      */
@@ -32,15 +31,15 @@ type Props = {
     /**
      * If the button is disabled
      */
-    isDisabled: boolean;
+    isDisabled?: boolean;
     /**
      * If the button has a "pressed" visual state (if disabled, is ignored)
      */
-    isPressed: boolean;
+    isPressed?: boolean;
     /**
      * Used to overlay a "loading" state above the content
      */
-    isLoading: boolean;
+    isLoading?: boolean;
     /**
      * "onClick" handler attached to the element
      */
@@ -84,7 +83,7 @@ class Button extends React.Component<Props, State> {
         super(props);
 
         this.state = {
-            isPressed: this.props.isPressed,
+            isPressed: this.props.isPressed || defaultProps.isPressed,
         };
 
         this.onTouchStart = this.onTouchStart.bind(this);
@@ -145,7 +144,7 @@ class Button extends React.Component<Props, State> {
                     <div className="button__content">
                         {this.props.icon ? (
                             <span className="button__icon">
-                                <Icon name={this.props.icon} size="md" />
+                                {this.props.icon}
                             </span>
                         ) : null}
                         {this.props.text ? (
@@ -168,18 +167,5 @@ class Button extends React.Component<Props, State> {
         });
     }
 }
-
-type IconProps = {
-    name: string;
-    size: string;
-};
-
-const Icon: FunctionComponent<IconProps> = ({ name, size }) => {
-    return (
-        <div>
-            {name},{size}
-        </div>
-    );
-};
 
 export default Button;

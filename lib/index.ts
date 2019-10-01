@@ -254,7 +254,7 @@ function serializeSymbol(docContext: DocEntryContext, symbol: Symbol): DocEntryT
         console.log('Symbol', symbol.getName());
     }
 
-    const type = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!);
+    const type = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
     const name = docContext.checker.typeToString(type);
     const documentation = displayPartsToString(symbol.getDocumentationComment(docContext.checker));
 
@@ -262,6 +262,7 @@ function serializeSymbol(docContext: DocEntryContext, symbol: Symbol): DocEntryT
         name,
         type: name,
         documentation,
+        isOptional: isOptional(symbol),
         value: serializeType(docContext, type),
     };
 }
@@ -275,7 +276,7 @@ function serializeClass(docContext: DocEntryContext, symbol: Symbol) {
     } as DocEntry;
 
     // Get the construct signatures
-    let constructorType = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration!);
+    let constructorType = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
     details.constructors = constructorType
         .getConstructSignatures()
         .map(serializeSignature.bind(null, docContext));
