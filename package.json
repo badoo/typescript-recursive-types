@@ -1,11 +1,11 @@
 {
   "name": "@magiclab/typescript-docgen",
   "private": false,
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
   "scripts": {
-    "build": "npm install && tsc",
+    "build": "rm -rf dist && npm install && tsc",
     "cli": "npx ts-node lib/cli.ts",
     "test": "npm run build && jest"
   },

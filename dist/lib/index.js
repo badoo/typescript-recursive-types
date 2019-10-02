@@ -19,6 +19,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var typescript_1 = require("typescript");
+var utils_1 = require("./utils");
 var __DEBUG__ = false;
 exports.default = {
     generateDocumentationFromNode: generateDocumentationFromNode,
@@ -28,7 +29,7 @@ exports.default = {
     serializeClass: serializeClass,
     serializeSignature: serializeSignature,
 };
-/** Generate documentation for all classes in a set of .ts files */
+/** Generate description for all classes in a set of .ts files */
 function generateDocumentationFromNode(checker, node, docGenParams) {
     return visit(checker, node, docGenParams);
 }
@@ -56,7 +57,7 @@ exports.generateDocumentationFromFiles = generateDocumentationFromFiles;
 function visit(checker, node, docGenParams) {
     var output = [];
     // Only consider exported nodes
-    if (!isNodeExported(node)) {
+    if (!utils_1.isNodeExported(node)) {
         return output;
     }
     if (typescript_1.isClassDeclaration(node) && node.name) {
@@ -82,58 +83,64 @@ function visit(checker, node, docGenParams) {
 }
 /** Serialize a symbol into a json object */
 function serializeType(docContext, type) {
-    var typeName = docContext.checker.typeToString(type);
+    var checker = docContext.checker;
+    var raw = checker.typeToString(type);
     var symbol = type.symbol;
-    var name = symbol ? symbol.getName() : typeName;
-    var documentation = symbol
+    var name = symbol ? symbol.getName() : raw;
+    var description = symbol
         ? typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker))
         : '';
-    var checker = docContext.checker;
     // We've already serialised the type in this stack
     // This is needed to prevent infinite loop on recursive or circular depencency types
-    var stopNestingTypes = docContext.serialisedTypes.includes(type) || docContext.serialisedTypes.length > docContext.maxDepth;
+    var stopNestingTypes = docContext.serialisedTypes.includes(type) ||
+        docContext.serialisedTypes.length > docContext.maxDepth;
     if (__DEBUG__) {
-        console.log('Type', typeName);
+        console.log('Type', raw);
     }
     // We don't want to mutate the context as it's shared
     var newDocContext = __assign(__assign({}, docContext), { serialisedTypes: __spreadArrays(docContext.serialisedTypes, [type]) });
     // In TS booleans behave like enums so we need to filter them out earlier
-    if (isBoolean(type)) {
+    if (utils_1.isBoolean(type)) {
         return {
             name: name,
-            typeName: typeName,
+            raw: raw,
             type: 'boolean',
-            documentation: documentation,
-            value: 'true | false',
+            description: description,
+            value: stopNestingTypes ? [] : type.types.map(serializeType.bind(null, newDocContext)),
         };
     }
-    if (isArray(type, checker)) {
+    if (utils_1.isArray(type, checker)) {
         return {
             name: name,
-            typeName: typeName,
+            raw: raw,
             type: 'array',
-            documentation: documentation,
-            value: stopNestingTypes ? [] : (type.typeArguments
-                ? type.typeArguments.map(serializeType.bind(null, newDocContext))
-                : 'none'),
+            description: description,
+            value: stopNestingTypes
+                ? []
+                : type.typeArguments
+                    ? type.typeArguments.map(serializeType.bind(null, newDocContext))
+                    : 'none',
         };
     }
-    if (isFunction(type)) {
+    if (utils_1.isFunction(type)) {
         return {
             name: name,
-            typeName: typeName,
+            raw: raw,
             type: 'function',
-            documentation: documentation,
-            value: stopNestingTypes ? [] : type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
+            description: description,
+            value: raw,
+            callSignature: stopNestingTypes
+                ? []
+                : type.getCallSignatures().map(serializeSignature.bind(null, newDocContext)),
         };
     }
     // Regular union or intersection enums
     if (type.isUnionOrIntersection()) {
         return {
             name: name,
-            typeName: typeName,
+            raw: raw,
             type: 'enum',
-            documentation: documentation,
+            description: description,
             value: stopNestingTypes ? [] : type.types.map(serializeType.bind(null, newDocContext)),
         };
     }
@@ -141,45 +148,47 @@ function serializeType(docContext, type) {
     if (type.typeArguments) {
         return {
             name: name,
-            typeName: typeName,
+            raw: raw,
             type: 'enum',
-            documentation: documentation,
-            value: stopNestingTypes ? [] : (type.typeArguments.map(serializeType.bind(null, newDocContext))),
+            description: description,
+            value: stopNestingTypes
+                ? []
+                : type.typeArguments.map(serializeType.bind(null, newDocContext)),
         };
     }
     if (!symbol || type.isLiteral()) {
         var value = 'unknown';
         var detectedType = 'unknown';
         if (type.isStringLiteral()) {
-            value = "\"" + type.value + "\"";
+            value = type.value;
             detectedType = 'string';
         }
         else if (type.isNumberLiteral()) {
             value = type.value;
             detectedType = 'number';
         }
-        else if (isBooleanLiteral(type)) {
-            value = String(type.value);
+        else if (utils_1.isBooleanLiteral(type)) {
+            value = raw;
             detectedType = 'boolean';
         }
         else if (typeof type.intrinsicName === 'string') {
             value = type.intrinsicName;
             detectedType = 'string';
         }
-        if (typeName === 'any' && value === 'any') {
+        if (raw === 'any' && value === 'any') {
             detectedType = 'any';
         }
         return {
             name: name,
-            typeName: typeName,
+            raw: raw,
             type: detectedType,
-            documentation: documentation,
+            description: description,
             value: value,
         };
     }
     var properties = type.getProperties();
     if (!properties) {
-        throw new Error("Expected type to have some properties: " + typeName);
+        throw new Error("Expected type to have some properties: " + raw);
     }
     var mappedProperties = [];
     // Check if max number of props has exceeded
@@ -190,9 +199,9 @@ function serializeType(docContext, type) {
     }
     return {
         name: name,
-        typeName: typeName,
+        raw: raw,
         type: 'shape',
-        documentation: documentation,
+        description: description,
         value: mappedProperties,
     };
 }
@@ -202,16 +211,17 @@ function serializeSymbol(docContext, symbol) {
     if (__DEBUG__) {
         console.log('Symbol', symbol.getName());
     }
-    var type = symbol.type || docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
-    var documentation = typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker));
-    return __assign(__assign({}, serializeType(docContext, type)), { documentation: documentation, isOptional: isOptional(symbol), name: symbol.getName() });
+    var type = symbol.type ||
+        docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
+    var description = typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker));
+    return __assign(__assign({}, serializeType(docContext, type)), { description: description, required: utils_1.isRequired(symbol), name: symbol.getName() });
 }
 exports.serializeSymbol = serializeSymbol;
 /** Serialize a class symbol information */
 function serializeClass(docContext, symbol) {
     var details = {
         name: symbol.getName(),
-        documentation: typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker)),
+        description: typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker)),
         type: serializeSymbol(docContext, symbol),
     };
     // Get the construct signatures
@@ -227,29 +237,8 @@ function serializeSignature(docContext, signature) {
     return {
         parameters: signature.parameters.map(serializeSymbol.bind(null, docContext)),
         returnType: docContext.checker.typeToString(signature.getReturnType()),
-        documentation: typescript_1.displayPartsToString(signature.getDocumentationComment(docContext.checker)),
+        description: typescript_1.displayPartsToString(signature.getDocumentationComment(docContext.checker)),
     };
 }
 exports.serializeSignature = serializeSignature;
-/** True if this is visible outside this file, false otherwise */
-function isNodeExported(node) {
-    return ((typescript_1.getCombinedModifierFlags(node) & typescript_1.ModifierFlags.Export) !== 0 ||
-        (!!node.parent && node.parent.kind === typescript_1.SyntaxKind.SourceFile));
-}
-function isBoolean(type) {
-    return !!(type.getFlags() & typescript_1.TypeFlags.Boolean); // Boolean
-}
-function isArray(type, checker) {
-    var name = checker.typeToString(type);
-    return name === '[]' || (type.symbol && type.symbol.getName() === 'Array');
-}
-function isFunction(type) {
-    return type.getCallSignatures().length > 0;
-}
-function isOptional(symbol) {
-    return !!(symbol.getFlags() & typescript_1.SymbolFlags.Optional);
-}
-function isBooleanLiteral(type) {
-    return !!(type.getFlags() & typescript_1.TypeFlags.BooleanLiteral);
-}
 //# sourceMappingURL=index.js.map
