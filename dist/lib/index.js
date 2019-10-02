@@ -183,8 +183,7 @@ function serializeType(docContext, type) {
     }
     var mappedProperties = [];
     // Check if max number of props has exceeded
-    var avoidNestingProperties = properties.length <= newDocContext.maxProps || stopNestingTypes;
-    if (avoidNestingProperties) {
+    if (!stopNestingTypes && properties.length <= newDocContext.maxProps) {
         properties.forEach(function (symbol) {
             mappedProperties.push(serializeSymbol(docContext, symbol));
         });
@@ -203,7 +202,7 @@ function serializeSymbol(docContext, symbol) {
     if (__DEBUG__) {
         console.log('Symbol', symbol.getName());
     }
-    var type = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
+    var type = symbol.type || docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
     var documentation = typescript_1.displayPartsToString(symbol.getDocumentationComment(docContext.checker));
     return __assign(__assign({}, serializeType(docContext, type)), { documentation: documentation, isOptional: isOptional(symbol), name: symbol.getName() });
 }
@@ -246,9 +245,6 @@ function isArray(type, checker) {
 }
 function isFunction(type) {
     return type.getCallSignatures().length > 0;
-}
-function isObservedSymbol(symbol) {
-    return Boolean(symbol && symbol.type && symbol.nameType);
 }
 function isOptional(symbol) {
     return !!(symbol.getFlags() & typescript_1.SymbolFlags.Optional);

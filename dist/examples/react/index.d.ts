@@ -1,10 +1,17 @@
 import * as React from 'react';
+declare type ABTest = {
+    list: any[];
+    reportHit: {
+        (arg0: string, ...args: any[]): void;
+    };
+};
+declare type Types = 'filled' | 'stroke' | 'transparent' | 'semitransparent' | 'monochrome' | 'link';
 declare type Props = {
     /**
      * The type of button
      * @notice 'monochrome' is a special button with specific pre-defined colors ('color' prop is overwritten) - 'link' is a special button with specific pre-defined font-family (system) and sizes (small/narrow)
      */
-    type?: 'filled' | 'stroke' | 'transparent' | 'semitransparent' | 'monochrome' | 'link';
+    type?: Types;
     /**
      * If the button should fit the smallest space available ("inline")
      */
@@ -23,21 +30,9 @@ declare type Props = {
      */
     text: string;
     /**
-     * The tag to use to render the button (e.g "button", "a", "label", etc.)
+     * AB TEST
      */
-    tag: string;
-    /**
-     * If the button is disabled
-     */
-    isDisabled?: boolean;
-    /**
-     * If the button has a "pressed" visual state (if disabled, is ignored)
-     */
-    isPressed?: boolean;
-    /**
-     * Used to overlay a "loading" state above the content
-     */
-    isLoading?: boolean;
+    test?: ABTest;
     /**
      * "onClick" handler attached to the element
      */
@@ -51,37 +46,8 @@ declare type Props = {
     onTouchStart: {
         (): void;
     };
-    /**
-     * "onTouchEnd" handler attached to the element
-     * @notice This property has an initial internal state, but can be extended from outside
-     */
-    onTouchEnd: {
-        (): void;
-    };
 };
-declare type State = {
-    isPressed: boolean;
-};
-declare class Button extends React.Component<Props, State> {
-    static defaultProps: {
-        type: string;
-        narrow: boolean;
-        color: string;
-        tag: string;
-        isDisabled: boolean;
-        isPressed: boolean;
-        isLoading: boolean;
-    };
-    constructor(props: Props);
-    onTouchStart(): void;
-    onTouchEnd(): void;
-    render(): React.ReactElement<{
-        className: string;
-        disabled: boolean | undefined;
-        onClick: (event: MouseEvent) => boolean;
-        onTouchStart: () => void;
-        onTouchEnd: () => void;
-        children: JSX.Element;
-    }, string | ((props: any) => React.ReactElement<any, string | any | (new (props: any) => React.Component<any, any, any>)> | null) | (new (props: any) => React.Component<any, any, any>)>;
+declare class Button extends React.Component<Props> {
+    render(): JSX.Element;
 }
 export default Button;

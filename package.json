@@ -1,7 +1,7 @@
 {
   "name": "@magiclab/typescript-docgen",
   "private": false,
-  "version": "0.0.8",
+  "version": "0.0.9",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
   "scripts": {

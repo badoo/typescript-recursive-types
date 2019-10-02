@@ -234,8 +234,7 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     const mappedProperties: DocEntryType[] = [];
 
     // Check if max number of props has exceeded
-    const avoidNestingProperties = properties.length <= newDocContext.maxProps || stopNestingTypes;
-    if (avoidNestingProperties) {
+    if (!stopNestingTypes && properties.length <= newDocContext.maxProps) {
         properties.forEach(symbol => {
             mappedProperties.push(serializeSymbol(docContext, symbol));
         });
@@ -256,7 +255,7 @@ function serializeSymbol(docContext: DocEntryContext, symbol: Symbol): DocEntryT
         console.log('Symbol', symbol.getName());
     }
 
-    const type = docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
+    const type = (symbol as ObservedSymbol).type || docContext.checker.getTypeOfSymbolAtLocation(symbol, symbol.valueDeclaration);
     const documentation = displayPartsToString(symbol.getDocumentationComment(docContext.checker));
 
     return {
@@ -315,12 +314,6 @@ function isArray(type: ObservedType, checker: TypeChecker): type is ObservedType
 
 function isFunction(type: Type) {
     return type.getCallSignatures().length > 0;
-}
-
-function isObservedSymbol(symbol: Symbol): symbol is ObservedSymbol {
-    return Boolean(
-        symbol && (symbol as ObservedSymbol).type && (symbol as ObservedSymbol).nameType
-    );
 }
 
 function isOptional(symbol: Symbol) {

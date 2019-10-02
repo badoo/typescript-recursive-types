@@ -1,12 +1,21 @@
 import * as React from 'react';
 import classnames from 'classnames';
 
+type ABTest = {
+    list: any[],
+    reportHit: {
+        (arg0: string, ...args: any[]): void;
+    }
+}
+
+type Types = 'filled' | 'stroke' | 'transparent' | 'semitransparent' | 'monochrome' | 'link';
+
 type Props = {
     /**
      * The type of button
      * @notice 'monochrome' is a special button with specific pre-defined colors ('color' prop is overwritten) - 'link' is a special button with specific pre-defined font-family (system) and sizes (small/narrow)
      */
-    type?: 'filled' | 'stroke' | 'transparent' | 'semitransparent' | 'monochrome' | 'link';
+    type?: Types;
     /**
      * If the button should fit the smallest space available ("inline")
      */
@@ -25,21 +34,9 @@ type Props = {
      */
     text: string;
     /**
-     * The tag to use to render the button (e.g "button", "a", "label", etc.)
+     * AB TEST
      */
-    tag: string;
-    /**
-     * If the button is disabled
-     */
-    isDisabled?: boolean;
-    /**
-     * If the button has a "pressed" visual state (if disabled, is ignored)
-     */
-    isPressed?: boolean;
-    /**
-     * Used to overlay a "loading" state above the content
-     */
-    isLoading?: boolean;
+    test?: ABTest;
     /**
      * "onClick" handler attached to the element
      */
@@ -53,118 +50,13 @@ type Props = {
     onTouchStart: {
         (): void;
     };
-    /**
-     * "onTouchEnd" handler attached to the element
-     * @notice This property has an initial internal state, but can be extended from outside
-     */
-    onTouchEnd: {
-        (): void;
-    };
 };
 
-type State = {
-    isPressed: boolean;
-};
-
-const defaultProps = {
-    type: 'filled',
-    narrow: false,
-    color: 'primary',
-    tag: 'button',
-    isDisabled: false,
-    isPressed: false,
-    isLoading: false,
-};
-
-class Button extends React.Component<Props, State> {
-    static defaultProps = defaultProps;
-
-    constructor(props: Props) {
-        super(props);
-
-        this.state = {
-            isPressed: this.props.isPressed || defaultProps.isPressed,
-        };
-
-        this.onTouchStart = this.onTouchStart.bind(this);
-        this.onTouchEnd = this.onTouchEnd.bind(this);
-    }
-
-    onTouchStart() {
-        this.setState({
-            isPressed: true,
-        });
-
-        if (this.props.onTouchStart) {
-            this.props.onTouchStart();
-        }
-    }
-
-    onTouchEnd() {
-        this.setState({
-            isPressed: false,
-        });
-
-        if (this.props.onTouchEnd) {
-            this.props.onTouchEnd();
-        }
-    }
-
+class Button extends React.Component<Props> {
     render() {
-        let isNarrow = this.props.narrow;
-        if (this.props.type === 'link') {
-            isNarrow = true;
-        }
-
-        let hasColor = this.props.color;
-        if (this.props.type === 'monochrome') {
-            hasColor = false;
-        }
-
-        const Tag = this.props.tag; // variable name must be capitalised (see https://reactjs.org/docs/jsx-in-depth.html#choosing-the-type-at-runtime)
-
-        const className = classnames({
-            button: true,
-            [`button--${this.props.type}`]: true,
-            'button--narrow': isNarrow,
-            [`button--color-${this.props.color}`]: hasColor,
-            'is-disabled': this.props.isDisabled,
-            'is-pressed': this.state.isPressed && !this.props.isDisabled,
-            'is-loading': this.props.isLoading,
-        });
-
-        return React.createElement(Tag, {
-            className: className,
-            disabled: this.props.isDisabled,
-            onClick: this.props.onClick,
-            onTouchStart: this.onTouchStart,
-            onTouchEnd: this.onTouchEnd,
-            children: (
-                <React.Fragment>
-                    <div className="button__content">
-                        {this.props.icon ? (
-                            <span className="button__icon">
-                                {this.props.icon}
-                            </span>
-                        ) : null}
-                        {this.props.text ? (
-                            <span className="button__text">
-                                {(() => {
-                                    if (this.props.type === 'link') {
-                                        return <p>{this.props.text}</p>;
-                                    } else {
-                                        return <div>{this.props.text}</div>;
-                                    }
-                                })()}
-                            </span>
-                        ) : null}
-                    </div>
-                    {this.props.isLoading ? (
-                        <span className="button__loading">Loading...</span>
-                    ) : null}
-                </React.Fragment>
-            ),
-        });
+        return (
+            <div></div>
+        )
     }
 }
 
