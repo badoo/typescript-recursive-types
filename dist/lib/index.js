@@ -187,9 +187,6 @@ function serializeType(docContext, type) {
         };
     }
     var properties = type.getProperties();
-    if (!properties) {
-        throw new Error("Expected type to have some properties: " + raw);
-    }
     var mappedProperties = [];
     // Check if max number of props has exceeded
     if (!stopNestingTypes && properties.length <= newDocContext.maxProps) {

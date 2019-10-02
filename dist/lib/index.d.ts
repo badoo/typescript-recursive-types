@@ -1,6 +1,6 @@
 import { CompilerOptions, Node, Signature, Symbol, Type, TypeChecker } from 'typescript';
-import { DocEntry, DocEntryContext, DocEntryType, DocGenParams } from './types';
-export { generateDocumentationFromNode, generateDocumentationFromFiles, serializeType, serializeSymbol, serializeClass, serializeSignature, };
+import { DocEntry, DocEntryContext, DocEntryType, DocGenParams, ObservedSymbol, ObservedType } from './types';
+export { generateDocumentationFromNode, generateDocumentationFromFiles, serializeType, serializeSymbol, serializeClass, serializeSignature, DocEntry, DocEntryContext, DocEntryType, DocGenParams, ObservedSymbol, ObservedType, };
 declare const _default: {
     generateDocumentationFromNode: typeof generateDocumentationFromNode;
     generateDocumentationFromFiles: typeof generateDocumentationFromFiles;

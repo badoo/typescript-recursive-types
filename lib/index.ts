@@ -32,6 +32,12 @@ export {
     serializeSymbol,
     serializeClass,
     serializeSignature,
+    DocEntry,
+    DocEntryContext,
+    DocEntryType,
+    DocGenParams,
+    ObservedSymbol,
+    ObservedType,
 };
 
 export default {
@@ -232,11 +238,6 @@ function serializeType(docContext: DocEntryContext, type: Type): DocEntryType {
     }
 
     const properties = type.getProperties();
-
-    if (!properties) {
-        throw new Error(`Expected type to have some properties: ${raw}`);
-    }
-
     const mappedProperties: DocEntryType[] = [];
 
     // Check if max number of props has exceeded

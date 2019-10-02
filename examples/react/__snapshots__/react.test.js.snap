@@ -17,10 +17,17 @@ Array [
               Object {
                 "description": "The type of button",
                 "name": "type",
-                "raw": "Types",
+                "raw": "\\"filled\\" | \\"stroke\\" | \\"transparent\\" | \\"semitransparent\\" | \\"monochrome\\" | \\"link\\" | undefined",
                 "required": false,
                 "type": "enum",
                 "value": Array [
+                  Object {
+                    "description": "",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
                   Object {
                     "description": "",
                     "name": "\\"filled\\"",
@@ -68,10 +75,17 @@ Array [
               Object {
                 "description": "If the button should fit the smallest space available (\\"inline\\")",
                 "name": "narrow",
-                "raw": "boolean",
+                "raw": "boolean | undefined",
                 "required": false,
-                "type": "boolean",
+                "type": "enum",
                 "value": Array [
+                  Object {
+                    "description": "",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
                   Object {
                     "description": "",
                     "name": "false",
@@ -91,10 +105,17 @@ Array [
               Object {
                 "description": "Color applied to the button",
                 "name": "color",
-                "raw": "false | \\"primary\\" | \\"secondary\\" | \\"generic-red\\"",
+                "raw": "false | \\"primary\\" | \\"secondary\\" | \\"generic-red\\" | undefined",
                 "required": false,
                 "type": "enum",
                 "value": Array [
+                  Object {
+                    "description": "",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
                   Object {
                     "description": "",
                     "name": "false",
@@ -134,6 +155,20 @@ Array [
                 "value": Array [
                   Object {
                     "description": "",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
+                  Object {
+                    "description": "",
+                    "name": "null",
+                    "raw": "null",
+                    "type": "string",
+                    "value": "null",
+                  },
+                  Object {
+                    "description": "",
                     "name": "string",
                     "raw": "string",
                     "type": "string",
@@ -170,7 +205,7 @@ Array [
                   Object {
                     "description": "",
                     "name": "ReactElement",
-                    "raw": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)>",
+                    "raw": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)>",
                     "type": "enum",
                     "value": Array [
                       Object {
@@ -182,8 +217,8 @@ Array [
                       },
                       Object {
                         "description": "",
-                        "name": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
-                        "raw": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
+                        "name": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)",
+                        "raw": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)",
                         "type": "enum",
                         "value": Array [
                           Object {
@@ -207,14 +242,14 @@ Array [
                                     "value": "any",
                                   },
                                 ],
-                                "returnType": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)>",
+                                "returnType": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)> | null",
                               },
                             ],
                             "description": "",
                             "name": "__type",
-                            "raw": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "raw": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null",
                             "type": "function",
-                            "value": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "value": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null",
                           },
                           Object {
                             "description": "",
@@ -243,10 +278,17 @@ Array [
                       Object {
                         "description": "",
                         "name": "key",
-                        "raw": "ReactText",
+                        "raw": "string | number | null",
                         "required": true,
                         "type": "enum",
                         "value": Array [
+                          Object {
+                            "description": "",
+                            "name": "null",
+                            "raw": "null",
+                            "type": "string",
+                            "value": "null",
+                          },
                           Object {
                             "description": "",
                             "name": "string",
@@ -274,7 +316,7 @@ Array [
                       Object {
                         "description": "",
                         "name": "type",
-                        "raw": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
+                        "raw": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)",
                         "required": true,
                         "type": "enum",
                         "value": Array [
@@ -299,14 +341,14 @@ Array [
                                     "value": "any",
                                   },
                                 ],
-                                "returnType": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)>",
+                                "returnType": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)> | null",
                               },
                             ],
                             "description": "",
                             "name": "__type",
-                            "raw": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "raw": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null",
                             "type": "function",
-                            "value": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "value": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null",
                           },
                           Object {
                             "description": "",
@@ -340,65 +382,80 @@ Array [
               Object {
                 "description": "AB TEST",
                 "name": "test",
-                "raw": "ABTest",
+                "raw": "ABTest | undefined",
                 "required": false,
-                "type": "shape",
+                "type": "enum",
                 "value": Array [
                   Object {
                     "description": "",
-                    "name": "list",
-                    "raw": "any[]",
-                    "required": true,
-                    "type": "array",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
+                  Object {
+                    "description": "",
+                    "name": "__type",
+                    "raw": "ABTest",
+                    "type": "shape",
                     "value": Array [
                       Object {
                         "description": "",
-                        "name": "any",
-                        "raw": "any",
-                        "type": "any",
-                        "value": "any",
-                      },
-                    ],
-                  },
-                  Object {
-                    "callSignature": Array [
-                      Object {
-                        "description": "",
-                        "parameters": Array [
+                        "name": "list",
+                        "raw": "any[]",
+                        "required": true,
+                        "type": "array",
+                        "value": Array [
                           Object {
                             "description": "",
-                            "name": "arg0",
-                            "raw": "string",
-                            "required": true,
-                            "type": "string",
-                            "value": "string",
-                          },
-                          Object {
-                            "description": "",
-                            "name": "args",
-                            "raw": "any[]",
-                            "required": true,
-                            "type": "array",
-                            "value": Array [
-                              Object {
-                                "description": "",
-                                "name": "any",
-                                "raw": "any",
-                                "type": "any",
-                                "value": "any",
-                              },
-                            ],
+                            "name": "any",
+                            "raw": "any",
+                            "type": "any",
+                            "value": "any",
                           },
                         ],
-                        "returnType": "void",
+                      },
+                      Object {
+                        "callSignature": Array [
+                          Object {
+                            "description": "",
+                            "parameters": Array [
+                              Object {
+                                "description": "",
+                                "name": "arg0",
+                                "raw": "string",
+                                "required": true,
+                                "type": "string",
+                                "value": "string",
+                              },
+                              Object {
+                                "description": "",
+                                "name": "args",
+                                "raw": "any[]",
+                                "required": true,
+                                "type": "array",
+                                "value": Array [
+                                  Object {
+                                    "description": "",
+                                    "name": "any",
+                                    "raw": "any",
+                                    "type": "any",
+                                    "value": "any",
+                                  },
+                                ],
+                              },
+                            ],
+                            "returnType": "void",
+                          },
+                        ],
+                        "description": "",
+                        "name": "reportHit",
+                        "raw": "(arg0: string, ...args: any[]) => void",
+                        "required": true,
+                        "type": "function",
+                        "value": "(arg0: string, ...args: any[]) => void",
                       },
                     ],
-                    "description": "",
-                    "name": "reportHit",
-                    "raw": "(arg0: string, ...args: any[]) => void",
-                    "required": true,
-                    "type": "function",
-                    "value": "(arg0: string, ...args: any[]) => void",
                   },
                 ],
               },
@@ -459,10 +516,17 @@ Array [
               Object {
                 "description": "The type of button",
                 "name": "type",
-                "raw": "Types",
+                "raw": "\\"filled\\" | \\"stroke\\" | \\"transparent\\" | \\"semitransparent\\" | \\"monochrome\\" | \\"link\\" | undefined",
                 "required": false,
                 "type": "enum",
                 "value": Array [
+                  Object {
+                    "description": "",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
                   Object {
                     "description": "",
                     "name": "\\"filled\\"",
@@ -510,10 +574,17 @@ Array [
               Object {
                 "description": "If the button should fit the smallest space available (\\"inline\\")",
                 "name": "narrow",
-                "raw": "boolean",
+                "raw": "boolean | undefined",
                 "required": false,
-                "type": "boolean",
+                "type": "enum",
                 "value": Array [
+                  Object {
+                    "description": "",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
                   Object {
                     "description": "",
                     "name": "false",
@@ -533,10 +604,17 @@ Array [
               Object {
                 "description": "Color applied to the button",
                 "name": "color",
-                "raw": "false | \\"primary\\" | \\"secondary\\" | \\"generic-red\\"",
+                "raw": "false | \\"primary\\" | \\"secondary\\" | \\"generic-red\\" | undefined",
                 "required": false,
                 "type": "enum",
                 "value": Array [
+                  Object {
+                    "description": "",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
                   Object {
                     "description": "",
                     "name": "false",
@@ -576,6 +654,20 @@ Array [
                 "value": Array [
                   Object {
                     "description": "",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
+                  Object {
+                    "description": "",
+                    "name": "null",
+                    "raw": "null",
+                    "type": "string",
+                    "value": "null",
+                  },
+                  Object {
+                    "description": "",
                     "name": "string",
                     "raw": "string",
                     "type": "string",
@@ -612,7 +704,7 @@ Array [
                   Object {
                     "description": "",
                     "name": "ReactElement",
-                    "raw": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)>",
+                    "raw": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)>",
                     "type": "enum",
                     "value": Array [
                       Object {
@@ -624,8 +716,8 @@ Array [
                       },
                       Object {
                         "description": "",
-                        "name": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
-                        "raw": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
+                        "name": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)",
+                        "raw": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)",
                         "type": "enum",
                         "value": Array [
                           Object {
@@ -649,14 +741,14 @@ Array [
                                     "value": "any",
                                   },
                                 ],
-                                "returnType": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)>",
+                                "returnType": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)> | null",
                               },
                             ],
                             "description": "",
                             "name": "__type",
-                            "raw": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "raw": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null",
                             "type": "function",
-                            "value": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "value": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null",
                           },
                           Object {
                             "description": "",
@@ -685,10 +777,17 @@ Array [
                       Object {
                         "description": "",
                         "name": "key",
-                        "raw": "ReactText",
+                        "raw": "string | number | null",
                         "required": true,
                         "type": "enum",
                         "value": Array [
+                          Object {
+                            "description": "",
+                            "name": "null",
+                            "raw": "null",
+                            "type": "string",
+                            "value": "null",
+                          },
                           Object {
                             "description": "",
                             "name": "string",
@@ -716,7 +815,7 @@ Array [
                       Object {
                         "description": "",
                         "name": "type",
-                        "raw": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)",
+                        "raw": "string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)",
                         "required": true,
                         "type": "enum",
                         "value": Array [
@@ -741,14 +840,14 @@ Array [
                                     "value": "any",
                                   },
                                 ],
-                                "returnType": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>) | (new (props: any) => Component<any, any, any>)>",
+                                "returnType": "ReactElement<any, string | ((props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null) | (new (props: any) => Component<any, any, any>)> | null",
                               },
                             ],
                             "description": "",
                             "name": "__type",
-                            "raw": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "raw": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null",
                             "type": "function",
-                            "value": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)>",
+                            "value": "(props: any) => ReactElement<any, string | ... | (new (props: any) => Component<any, any, any>)> | null",
                           },
                           Object {
                             "description": "",
@@ -782,65 +881,80 @@ Array [
               Object {
                 "description": "AB TEST",
                 "name": "test",
-                "raw": "ABTest",
+                "raw": "ABTest | undefined",
                 "required": false,
-                "type": "shape",
+                "type": "enum",
                 "value": Array [
                   Object {
                     "description": "",
-                    "name": "list",
-                    "raw": "any[]",
-                    "required": true,
-                    "type": "array",
+                    "name": "undefined",
+                    "raw": "undefined",
+                    "type": "string",
+                    "value": "undefined",
+                  },
+                  Object {
+                    "description": "",
+                    "name": "__type",
+                    "raw": "ABTest",
+                    "type": "shape",
                     "value": Array [
                       Object {
                         "description": "",
-                        "name": "any",
-                        "raw": "any",
-                        "type": "any",
-                        "value": "any",
-                      },
-                    ],
-                  },
-                  Object {
-                    "callSignature": Array [
-                      Object {
-                        "description": "",
-                        "parameters": Array [
+                        "name": "list",
+                        "raw": "any[]",
+                        "required": true,
+                        "type": "array",
+                        "value": Array [
                           Object {
                             "description": "",
-                            "name": "arg0",
-                            "raw": "string",
-                            "required": true,
-                            "type": "string",
-                            "value": "string",
-                          },
-                          Object {
-                            "description": "",
-                            "name": "args",
-                            "raw": "any[]",
-                            "required": true,
-                            "type": "array",
-                            "value": Array [
-                              Object {
-                                "description": "",
-                                "name": "any",
-                                "raw": "any",
-                                "type": "any",
-                                "value": "any",
-                              },
-                            ],
+                            "name": "any",
+                            "raw": "any",
+                            "type": "any",
+                            "value": "any",
                           },
                         ],
-                        "returnType": "void",
+                      },
+                      Object {
+                        "callSignature": Array [
+                          Object {
+                            "description": "",
+                            "parameters": Array [
+                              Object {
+                                "description": "",
+                                "name": "arg0",
+                                "raw": "string",
+                                "required": true,
+                                "type": "string",
+                                "value": "string",
+                              },
+                              Object {
+                                "description": "",
+                                "name": "args",
+                                "raw": "any[]",
+                                "required": true,
+                                "type": "array",
+                                "value": Array [
+                                  Object {
+                                    "description": "",
+                                    "name": "any",
+                                    "raw": "any",
+                                    "type": "any",
+                                    "value": "any",
+                                  },
+                                ],
+                              },
+                            ],
+                            "returnType": "void",
+                          },
+                        ],
+                        "description": "",
+                        "name": "reportHit",
+                        "raw": "(arg0: string, ...args: any[]) => void",
+                        "required": true,
+                        "type": "function",
+                        "value": "(arg0: string, ...args: any[]) => void",
                       },
                     ],
-                    "description": "",
-                    "name": "reportHit",
-                    "raw": "(arg0: string, ...args: any[]) => void",
-                    "required": true,
-                    "type": "function",
-                    "value": "(arg0: string, ...args: any[]) => void",
                   },
                 ],
               },
@@ -932,16 +1046,31 @@ class Foo extends React.Component {
 }
 \`\`\`",
           "name": "contextType",
-          "raw": "Context<any>",
+          "raw": "Context<any> | undefined",
           "required": false,
           "type": "enum",
           "value": Array [
             Object {
               "description": "",
-              "name": "any",
-              "raw": "any",
-              "type": "any",
-              "value": "any",
+              "name": "undefined",
+              "raw": "undefined",
+              "type": "string",
+              "value": "undefined",
+            },
+            Object {
+              "description": "",
+              "name": "Context",
+              "raw": "Context<any>",
+              "type": "enum",
+              "value": Array [
+                Object {
+                  "description": "",
+                  "name": "any",
+                  "raw": "any",
+                  "type": "any",
+                  "value": "any",
+                },
+              ],
             },
           ],
         },
